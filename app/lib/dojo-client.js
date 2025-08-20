@@ -31,19 +31,22 @@ class DojoClient {
         rpcUrl: config.dojo.rpcUrl
       });
 
-      // Create RPC provider
+      // Create RPC provider for dev environment
       this.provider = new RpcProvider({
         nodeUrl: config.dojo.rpcUrl
       });
 
-      // Create admin account first
+      // Create admin account configured for dev Katana (v1 transactions, no fees)
       this.adminAccount = new Account(
         this.provider,
         config.admin.address,
         config.admin.privateKey
       );
+      
+      // Let starknet.js handle transaction formatting naturally
+      // this.adminAccount keeps default behavior
 
-      // Use createDojoConfig з справжнім manifest
+  
       const dojoConfig = createDojoConfig({
         rpcUrl: config.dojo.rpcUrl,
         toriiUrl: config.dojo.toriiUrl,

@@ -1703,7 +1703,7 @@
       ]
     },
     {
-      "address": "0x3880232c905b52ed37ead6d51a4cd2f562c62037317e88669a3ddf5f58f144d",
+      "address": "0x00914690e3286dd88f560530c1780d664cd8eef9711f6e7a3c27265529bf2795",
       "class_hash": "0x39b8b20dbbae935e9496bd1f8e08a76ddbfb041056bbc95c792eb14b08d6170",
       "abi": [
         {
@@ -2055,7 +2055,7 @@
       ]
     },
     {
-      "address": "0x71773b31324b6e5e821a7f9ea0007b96c76cac2008a115c0563d7ffdd5dfcb6",
+      "address": "0x01fe71d4188427ce4f055244543cae8e3658448dcd9a391bf02c70fce4413a44",
       "class_hash": "0x7442e3e353ba5ad44bf6be2e53e2361a883ad4da42ae581b82933144972de69",
       "abi": [
         {

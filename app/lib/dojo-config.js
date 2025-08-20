@@ -63,6 +63,13 @@ export const config = {
 };
 
 export function createDojoClientConfig() {
+  console.log('Creating Dojo client config with:', {
+    rpcUrl: config.dojo.rpcUrl,
+    toriiUrl: config.dojo.toriiUrl,
+    worldAddress: config.dojo.worldAddress,
+    adminAddress: config.admin.address,
+    manifest: manifest
+  });
   return createDojoConfig({
     manifest,
     rpcUrl: config.dojo.rpcUrl,

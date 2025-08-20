@@ -220,6 +220,12 @@ export function setupWorld(provider: DojoProvider) {
 
 	const game_createGame = async (snAccount: Account | AccountInterface) => {
 		try {
+
+			console.log("Call game_createGame");
+			console.log("Account:", snAccount);
+			console.log("Provider:", provider);
+			console.log("Calldata:", build_game_createGame_calldata());
+
 			return await provider.execute(
 				snAccount,
 				build_game_createGame_calldata(),

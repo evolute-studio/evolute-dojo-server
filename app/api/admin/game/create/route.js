@@ -21,6 +21,7 @@ export async function POST(request) {
   }
 
   try {
+    console.log('Creating game...');
     const dojoClient = getDojoClient();
     const result = await dojoClient.createGame();
 
