@@ -54,8 +54,6 @@ class DojoClient {
         manifest: realManifest
       });
 
-      console.log('DojoConfig created:', JSON.stringify(dojoConfig, null, 2));
-
       // Initialize Dojo provider - fail if it doesn't work
       console.log('🔧 Creating DojoProvider with config:', {
         hasManifest: !!dojoConfig.manifest,
@@ -64,8 +62,6 @@ class DojoClient {
         hasRpcUrl: !!dojoConfig.rpcUrl,
         hasToriiUrl: !!dojoConfig.toriiUrl
       });
-      
-      console.log('📋 Full manifest check:', JSON.stringify(dojoConfig.manifest?.world, null, 2));
       
       // DojoProvider конструктор: (manifest, url, logLevel)
       this.dojoProvider = new DojoProvider(
@@ -78,12 +74,6 @@ class DojoClient {
 
       // Setup world with generated contracts
       this.world = setupWorld(this.dojoProvider);
-      console.log('World setup complete, methods available:', {
-        game: Object.keys(this.world.game || {}),
-        player_profile_actions: Object.keys(this.world.player_profile_actions || {}),
-        account_migration: Object.keys(this.world.account_migration || {}),
-        tutorial: Object.keys(this.world.tutorial || {})
-      });
 
       this.initialized = true;
       console.log('Dojo client initialized with generated contracts');
@@ -98,8 +88,6 @@ class DojoClient {
   // Game actions using generated contracts
   async createGame() {
     await this.initialize();
-    console.log('World structure:', Object.keys(this.world));
-    console.log('Game methods:', Object.keys(this.world.game || {}));
     return await this.world.game.createGame(this.adminAccount);
   }
 

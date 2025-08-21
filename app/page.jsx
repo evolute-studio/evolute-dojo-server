@@ -1,5 +1,5 @@
-import AdminPanel from './components/AdminPanel';
+import NewAdminPanel from './components/NewAdminPanel';
 
 export default function Home() {
-  return <AdminPanel />;
+  return <NewAdminPanel />;
 }
