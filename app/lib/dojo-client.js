@@ -1,46 +1,50 @@
 import { DojoProvider, createDojoConfig } from '@dojoengine/core';
 import { Account, RpcProvider } from 'starknet';
-import { config } from './dojo-config.js';
+import { config, createDynamicConfig } from './dojo-config.js';
 import realManifest from './manifest_testing.json';
 import { setupWorld } from './dojo/contracts.gen.ts';
 
 class DojoClient {
-  constructor() {
+  constructor(profileConfig = null) {
     this.provider = null;
     this.dojoProvider = null;
     this.world = null;
     this.adminAccount = null;
     this.initialized = false;
+    this.profileConfig = profileConfig; // Override config from profile
   }
 
   async initialize() {
     if (this.initialized) return true;
 
     try {
+      // Use provided profile config or load dynamic config
+      const dynamicConfig = this.profileConfig || await createDynamicConfig();
+      
       // Validate required config
-      if (!config.admin.address || !config.admin.privateKey) {
+      if (!dynamicConfig.admin.address || !dynamicConfig.admin.privateKey) {
         throw new Error('Admin address and private key are required');
       }
-      if (!config.dojo.worldAddress || !config.dojo.rpcUrl) {
+      if (!dynamicConfig.dojo.worldAddress || !dynamicConfig.dojo.rpcUrl) {
         throw new Error('Dojo world address and RPC URL are required');
       }
 
       console.log('Initializing with config:', {
-        adminAddress: config.admin.address,
-        worldAddress: config.dojo.worldAddress,
-        rpcUrl: config.dojo.rpcUrl
+        adminAddress: dynamicConfig.admin.address,
+        worldAddress: dynamicConfig.dojo.worldAddress,
+        rpcUrl: dynamicConfig.dojo.rpcUrl
       });
 
       // Create RPC provider for dev environment
       this.provider = new RpcProvider({
-        nodeUrl: config.dojo.rpcUrl
+        nodeUrl: dynamicConfig.dojo.rpcUrl
       });
 
       // Create admin account configured for dev Katana (v1 transactions, no fees)
       this.adminAccount = new Account(
         this.provider,
-        config.admin.address,
-        config.admin.privateKey
+        dynamicConfig.admin.address,
+        dynamicConfig.admin.privateKey
       );
       
       // Let starknet.js handle transaction formatting naturally
@@ -48,9 +52,9 @@ class DojoClient {
 
   
       const dojoConfig = createDojoConfig({
-        rpcUrl: config.dojo.rpcUrl,
-        toriiUrl: config.dojo.toriiUrl,
-        worldAddress: config.dojo.worldAddress,
+        rpcUrl: dynamicConfig.dojo.rpcUrl,
+        toriiUrl: dynamicConfig.dojo.toriiUrl,
+        worldAddress: dynamicConfig.dojo.worldAddress,
         manifest: realManifest
       });
 
@@ -192,11 +196,13 @@ class DojoClient {
     
     try {
       const nonce = await this.adminAccount.getNonce();
+      const dynamicConfig = this.profileConfig || await createDynamicConfig();
+      
       return {
-        address: config.admin.address,
+        address: dynamicConfig.admin.address,
         nonce: nonce.toString(),
-        worldAddress: config.dojo.worldAddress,
-        rpcUrl: config.dojo.rpcUrl,
+        worldAddress: dynamicConfig.dojo.worldAddress,
+        rpcUrl: dynamicConfig.dojo.rpcUrl,
         hasWorld: !!this.world,
         isRealTransactions: this.isRealTransactions || false,
         transactionMode: this.isRealTransactions ? "REAL BLOCKCHAIN" : "MOCK/SIMULATION"
@@ -216,7 +222,13 @@ class DojoClient {
 // Singleton instance for server-side usage
 let dojoClientInstance = null;
 
-export function getDojoClient() {
+export function getDojoClient(profileConfig = null) {
+  // If profile config provided, create new instance
+  if (profileConfig) {
+    return new DojoClient(profileConfig);
+  }
+  
+  // Otherwise use singleton
   if (!dojoClientInstance) {
     dojoClientInstance = new DojoClient();
   }

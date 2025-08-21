@@ -63,6 +63,12 @@ const ADDITIONAL_SECTIONS = [
     name: 'Monitoring',
     icon: Activity,
     description: 'Logs and performance metrics'
+  },
+  {
+    id: 'settings',
+    name: 'Settings',
+    icon: Settings,
+    description: 'Connection profiles and configuration'
   }
 ];
 

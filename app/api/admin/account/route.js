@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDojoClient } from '../../../lib/dojo-client.js';
 import { config } from '../../../lib/dojo-config.js';
+import { createProfileAwareHandler } from '../../../lib/profileMiddleware.js';
 
 function authenticateApiKey(request) {
   const apiKey = request.headers.get('x-api-key') || 
@@ -12,7 +13,7 @@ function authenticateApiKey(request) {
   return true;
 }
 
-export async function GET(request) {
+async function handleGetAccount(request) {
   if (!authenticateApiKey(request)) {
     return NextResponse.json({
       success: false,
@@ -21,14 +22,26 @@ export async function GET(request) {
   }
 
   try {
-    const dojoClient = getDojoClient();
+    // Get profile config from middleware
+    const profileInfo = request.profileInfo;
+    const dojoClient = getDojoClient(profileInfo?.config);
     const accountInfo = await dojoClient.getAccountInfo();
 
-    return NextResponse.json({
+    // Add profile info to response
+    const response = {
       success: true,
-      data: accountInfo,
+      data: {
+        ...accountInfo,
+        profileUsed: profileInfo?.profile?.name || 'Default Configuration'
+      },
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (profileInfo?.warning) {
+      response.warning = profileInfo.warning;
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Get account info error:', error);
     return NextResponse.json({
@@ -38,3 +51,5 @@ export async function GET(request) {
     }, { status: 500 });
   }
 }
+
+export const GET = createProfileAwareHandler(handleGetAccount);

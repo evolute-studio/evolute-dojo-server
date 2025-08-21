@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDojoClient } from '../../../lib/dojo-client.js';
 import { config } from '../../../lib/dojo-config.js';
+import { createProfileAwareHandler } from '../../../lib/profileMiddleware.js';
 
 function authenticateApiKey(request) {
   const apiKey = request.headers.get('x-api-key') || 
@@ -12,7 +13,7 @@ function authenticateApiKey(request) {
   return true;
 }
 
-export async function POST(request) {
+async function handleChangeProfile(request) {
   if (!authenticateApiKey(request)) {
     return NextResponse.json({
       success: false,
@@ -30,22 +31,31 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
-    console.log('Changing username to:', username);
-    const dojoClient = getDojoClient();
+    const profileInfo = request.profileInfo;
+    console.log(`Changing username to: ${username} using profile: ${profileInfo?.profile?.name || 'Default'}`);
+    
+    const dojoClient = getDojoClient(profileInfo?.config);
     const result = await dojoClient.changeUsername(username);
     
     console.log('✅ Username changed successfully! Transaction hash:', result.transaction_hash);
 
-    return NextResponse.json({
+    const response = {
       success: true,
       message: 'Username changed successfully',
       transactionHash: result.transaction_hash,
       data: {
         username: username,
-        method: 'dojo-generated'
+        method: 'dojo-generated',
+        profileUsed: profileInfo?.profile?.name || 'Default Configuration'
       },
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (profileInfo?.warning) {
+      response.warning = profileInfo.warning;
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Change username error:', error);
     return NextResponse.json({
@@ -55,3 +65,5 @@ export async function POST(request) {
     }, { status: 500 });
   }
 }
+
+export const POST = createProfileAwareHandler(handleChangeProfile);

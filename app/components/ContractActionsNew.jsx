@@ -8,6 +8,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
+import ConnectionProfiles from './ConnectionProfiles';
 import { 
   Play, 
   Users, 
@@ -269,6 +270,15 @@ const CONTRACT_ACTIONS = {
       name: 'Performance Metrics',
       description: 'View performance data',
       icon: Activity,
+      params: []
+    }
+  ],
+  settings: [
+    {
+      id: 'connection_profiles',
+      name: 'Connection Profiles',
+      description: 'Manage connection configurations',
+      icon: Settings,
       params: []
     }
   ]
@@ -609,6 +619,21 @@ export default function ContractActionsNew({
               </CardContent>
             </Card>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedContract === 'settings') {
+    return (
+      <div className="flex-1 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Settings</h1>
+            <p className="text-muted-foreground">Manage connection profiles and system configuration</p>
+          </div>
+          
+          <ConnectionProfiles />
         </div>
       </div>
     );

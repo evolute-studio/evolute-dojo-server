@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDojoClient } from '../../../../lib/dojo-client.js';
 import { config } from '../../../../lib/dojo-config.js';
+import { createProfileAwareHandler } from '../../../../lib/profileMiddleware.js';
 
 function authenticateApiKey(request) {
   const apiKey = request.headers.get('x-api-key') || 
@@ -12,7 +13,7 @@ function authenticateApiKey(request) {
   return true;
 }
 
-export async function POST(request) {
+async function handleCreateGame(request) {
   if (!authenticateApiKey(request)) {
     return NextResponse.json({
       success: false,
@@ -21,19 +22,28 @@ export async function POST(request) {
   }
 
   try {
-    console.log('Creating game...');
-    const dojoClient = getDojoClient();
+    const profileInfo = request.profileInfo;
+    console.log(`Creating game using profile: ${profileInfo?.profile?.name || 'Default'}`);
+    
+    const dojoClient = getDojoClient(profileInfo?.config);
     const result = await dojoClient.createGame();
 
-    return NextResponse.json({
+    const response = {
       success: true,
       message: 'Game created successfully',
       data: {
         transactionHash: result.transaction_hash,
-        method: 'dojo-generated'
+        method: 'dojo-generated',
+        profileUsed: profileInfo?.profile?.name || 'Default Configuration'
       },
       timestamp: new Date().toISOString()
-    });
+    };
+
+    if (profileInfo?.warning) {
+      response.warning = profileInfo.warning;
+    }
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Create game error:', error);
     return NextResponse.json({
@@ -43,3 +53,5 @@ export async function POST(request) {
     }, { status: 500 });
   }
 }
+
+export const POST = createProfileAwareHandler(handleCreateGame);

@@ -1,4 +1,6 @@
 import { createDojoConfig } from '@dojoengine/core';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 // Default manifest for Evolute Dojo game
 export const manifest = {
@@ -81,10 +83,84 @@ export function createDojoClientConfig() {
   });
 }
 
+// Load active profile from disk
+export async function loadActiveProfile() {
+  const PROFILES_FILE = path.join(process.cwd(), 'data', 'profiles.json');
+  
+  try {
+    const data = await fs.readFile(PROFILES_FILE, 'utf8');
+    const profilesData = JSON.parse(data);
+    
+    if (profilesData.activeProfileId) {
+      const activeProfile = profilesData.profiles.find(p => p.id === profilesData.activeProfileId);
+      if (activeProfile) {
+        return activeProfile;
+      }
+    }
+  } catch (error) {
+    // File doesn't exist or is invalid, fallback to env vars
+  }
+  
+  return null;
+}
+
+// Create config with active profile or fallback to env vars
+export async function createDynamicConfig() {
+  const activeProfile = await loadActiveProfile();
+  
+  if (activeProfile) {
+    console.log(`📋 Using active profile: ${activeProfile.name}${activeProfile.isDefault ? ' (default)' : ''}`);
+    
+    // If using default profile, prefer env vars directly for better validation
+    if (activeProfile.isDefault) {
+      return {
+        server: {
+          port: process.env.PORT || 3000,
+          nodeEnv: process.env.NODE_ENV || 'development'
+        },
+        admin: {
+          privateKey: process.env.ADMIN_PRIVATE_KEY,
+          address: process.env.ADMIN_ADDRESS
+        },
+        dojo: {
+          rpcUrl: process.env.DOJO_RPC_URL || 'https://api.cartridge.gg/x/dev-evolute-duel/katana',
+          toriiUrl: process.env.DOJO_TORII_URL || 'https://api.cartridge.gg/x/dev-evolute-duel/torii',
+          relayUrl: process.env.DOJO_RELAY_URL || 'http://localhost:9090',
+          worldAddress: process.env.DOJO_WORLD_ADDRESS || '0x0230035e44105bbc11acf2dd1b271a78d53627a810e6a2fb024fd2edcf273c9c'
+        },
+        security: {
+          apiSecretKey: process.env.API_SECRET_KEY
+        }
+      };
+    }
+    
+    return {
+      server: {
+        port: process.env.PORT || 3000,
+        nodeEnv: process.env.NODE_ENV || 'development'
+      },
+      admin: {
+        privateKey: activeProfile.adminPrivateKey,
+        address: activeProfile.adminAddress
+      },
+      dojo: {
+        rpcUrl: activeProfile.rpcUrl,
+        toriiUrl: activeProfile.toriiUrl,
+        relayUrl: process.env.DOJO_RELAY_URL || 'http://localhost:9090',
+        worldAddress: activeProfile.worldAddress
+      },
+      security: {
+        apiSecretKey: process.env.API_SECRET_KEY
+      }
+    };
+  } else {
+    console.log('📋 Using environment variables (no profile found)');
+    return config;
+  }
+}
+
 export function validateEnvironment() {
   const requiredVars = [
-    'ADMIN_PRIVATE_KEY',
-    'ADMIN_ADDRESS',
     'API_SECRET_KEY'
   ];
 

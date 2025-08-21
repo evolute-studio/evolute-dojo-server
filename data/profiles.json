@@ -1,0 +1,61 @@
+{
+  "profiles": [
+    {
+      "id": "default",
+      "name": "Environment Variables",
+      "description": "Default configuration from environment variables (Read-only)",
+      "adminAddress": "Not configured",
+      "adminPrivateKey": "Not configured",
+      "rpcUrl": "Not configured",
+      "toriiUrl": "Not configured",
+      "worldAddress": "Not configured",
+      "contracts": {
+        "gameContract": "Not configured",
+        "playerProfileActions": "Not configured",
+        "tutorialContract": "Not configured",
+        "accountMigration": "Not configured"
+      },
+      "isDefault": true,
+      "isReadOnly": true,
+      "createdAt": "2025-08-21T12:13:17.422Z",
+      "updatedAt": "2025-08-21T12:13:17.422Z"
+    },
+    {
+      "id": "meld1jjy633rpxflgdg",
+      "name": "Development",
+      "description": "Development",
+      "adminAddress": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+      "adminPrivateKey": "0x043a6076f29b7a39638d49837453182c2f0c48c612e138a2bed599185a9cde26",
+      "rpcUrl": "https://api.cartridge.gg/x/dev-evolute-duel/katana",
+      "toriiUrl": "https://api.cartridge.gg/x/dev-evolute-duel/torii",
+      "worldAddress": "0x0230035e44105bbc11acf2dd1b271a78d53627a810e6a2fb024fd2edcf273c9c",
+      "contracts": {
+        "gameContract": "0x00914690e3286dd88f560530c1780d664cd8eef9711f6e7a3c27265529bf2795",
+        "playerProfileActions": "0x01fe71d4188427ce4f055244543cae8e3658448dcd9a391bf02c70fce4413a44",
+        "tutorialContract": "0x03f51b5878bbc200edc8c34ec344fac7f1088b0c976ac2527a75ae374c33d199",
+        "accountMigration": "0x07faec5aea439a5e51d36bfdcb1a25e24b1c84f875a4bb224078a3e506c43210"
+      },
+      "createdAt": "2025-08-21T12:10:59.518Z",
+      "updatedAt": "2025-08-21T12:10:59.518Z"
+    },
+    {
+      "id": "meld4hymbv1eivi2hy4",
+      "name": "Test",
+      "description": "Test",
+      "adminAddress": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+      "adminPrivateKey": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+      "rpcUrl": "https://api.cartridge.gg/x/dev-evolute-duel/katana",
+      "toriiUrl": "https://api.cartridge.gg/x/dev-evolute-duel/torii",
+      "worldAddress": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+      "contracts": {
+        "gameContract": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+        "playerProfileActions": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+        "tutorialContract": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
+        "accountMigration": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2"
+      },
+      "createdAt": "2025-08-21T12:13:17.422Z",
+      "updatedAt": "2025-08-21T12:13:17.422Z"
+    }
+  ],
+  "activeProfileId": "meld1jjy633rpxflgdg"
+}
