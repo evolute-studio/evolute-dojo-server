@@ -1,18 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/admin/execute/route": "app/api/admin/execute/route.js",
-  "/api/admin/game/actions/route": "app/api/admin/game/actions/route.js",
-  "/api/admin/game/cancel/route": "app/api/admin/game/cancel/route.js",
-  "/api/admin/game/join/route": "app/api/admin/game/join/route.js",
-  "/api/admin/health/route": "app/api/admin/health/route.js",
-  "/api/admin/player/route": "app/api/admin/player/route.js",
-  "/api/admin/profiles/[id]/activate/route": "app/api/admin/profiles/[id]/activate/route.js",
-  "/api/admin/profiles/[id]/route": "app/api/admin/profiles/[id]/route.js",
-  "/api/admin/profiles/route": "app/api/admin/profiles/route.js",
-  "/api/auth/token/route": "app/api/auth/token/route.js",
-  "/api/test/dojo/route": "app/api/test/dojo/route.js",
   "/page": "app/page.js",
+  "/api/admin/health/route": "app/api/admin/health/route.js",
   "/api/admin/account/route": "app/api/admin/account/route.js",
-  "/api/admin/profile/route": "app/api/admin/profile/route.js",
-  "/api/admin/game/create/route": "app/api/admin/game/create/route.js"
+  "/api/admin/games/route": "app/api/admin/games/route.js"
 }
