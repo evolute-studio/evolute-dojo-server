@@ -637,12 +637,12 @@ export default function ContractActionsNew({
                               {game.players.map((player, idx) => (
                                 <p key={idx} className="ml-2">
                                   {idx === 0 ? '🎮 Host' : `👤 Player ${idx + 1}`}: 
-                                  <span className="font-mono ml-1">{player.formatted}</span>
+                                  <span className="font-mono ml-1 text-xs break-all">{player.address}</span>
                                 </p>
                               ))}
                             </div>
                           ) : (
-                            <p>Player: <span className="font-mono">{game.player}</span></p>
+                            <p>Player: <span className="font-mono text-xs break-all">{game.playerFull}</span></p>
                           )}
                           {game.boardId && (
                             <p>Board ID: <span className="font-mono text-xs">{game.boardId}</span></p>

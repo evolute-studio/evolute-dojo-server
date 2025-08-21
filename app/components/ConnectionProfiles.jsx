@@ -19,7 +19,10 @@ import {
   EyeOff,
   ChevronRight,
   Settings2,
-  Loader2
+  Loader2,
+  Download,
+  Upload,
+  FileText
 } from 'lucide-react';
 
 export default function ConnectionProfiles() {
@@ -45,6 +48,8 @@ export default function ConnectionProfiles() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   // Load profiles on mount
   useEffect(() => {
@@ -255,6 +260,115 @@ export default function ConnectionProfiles() {
     }
   };
 
+  const handleExportProfiles = async () => {
+    setIsExporting(true);
+    try {
+      // Get all non-default profiles for export
+      const exportProfiles = profiles.filter(profile => !profile.isDefault);
+      
+      const exportData = {
+        version: "1.0",
+        exportDate: new Date().toISOString(),
+        profiles: exportProfiles
+      };
+
+      // Create and download JSON file
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `connection-profiles-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export failed:', error);
+      setErrors({ general: 'Failed to export profiles' });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImportProfiles = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    const reader = new FileReader();
+    
+    reader.onload = async (e) => {
+      try {
+        const importData = JSON.parse(e.target?.result);
+        
+        // Validate import data structure
+        if (!importData.profiles || !Array.isArray(importData.profiles)) {
+          throw new Error('Invalid import file format');
+        }
+
+        let importedCount = 0;
+        let skippedCount = 0;
+
+        for (const profile of importData.profiles) {
+          // Validate required fields
+          if (!profile.name || !profile.adminAddress || !profile.rpcUrl) {
+            skippedCount++;
+            continue;
+          }
+
+          // Check if profile with same name already exists
+          const existingProfile = profiles.find(p => p.name === profile.name);
+          if (existingProfile && !confirm(`Profile "${profile.name}" already exists. Replace it?`)) {
+            skippedCount++;
+            continue;
+          }
+
+          // Import profile
+          try {
+            const url = existingProfile 
+              ? `/api/admin/profiles/${existingProfile.id}`
+              : '/api/admin/profiles';
+            
+            const response = await fetch(url, {
+              method: existingProfile ? 'PUT' : 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(profile)
+            });
+
+            if (response.ok) {
+              importedCount++;
+            } else {
+              skippedCount++;
+            }
+          } catch (error) {
+            console.error('Failed to import profile:', profile.name, error);
+            skippedCount++;
+          }
+        }
+
+        // Refresh profiles list
+        await loadProfiles();
+        
+        // Show result
+        const message = `Import completed: ${importedCount} profiles imported, ${skippedCount} skipped`;
+        alert(message);
+        
+      } catch (error) {
+        console.error('Import failed:', error);
+        setErrors({ general: 'Failed to import profiles: ' + error.message });
+      } finally {
+        setIsImporting(false);
+        // Clear file input
+        event.target.value = '';
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
   const formatAddress = (addr) => {
     if (!addr || addr === 'Not configured') return addr;
     return `${addr.slice(0, 10)}...${addr.slice(-8)}`;
@@ -265,12 +379,55 @@ export default function ConnectionProfiles() {
       {/* Left Sidebar - Profiles List */}
       <div className="w-80 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold text-sm">Connection Profiles</h3>
             <Button size="sm" onClick={handleNewProfile}>
               <Plus className="h-4 w-4 mr-1" />
               New
             </Button>
+          </div>
+          
+          {/* Export/Import buttons */}
+          <div className="flex items-center space-x-2">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              onClick={handleExportProfiles}
+              disabled={isExporting || profiles.filter(p => !p.isDefault).length === 0}
+              className="flex-1"
+            >
+              {isExporting ? (
+                <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+              ) : (
+                <Download className="h-3 w-3 mr-1" />
+              )}
+              Export
+            </Button>
+            
+            <div className="flex-1">
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleImportProfiles}
+                disabled={isImporting}
+                className="hidden"
+                id="profile-import"
+              />
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => document.getElementById('profile-import')?.click()}
+                disabled={isImporting}
+                className="w-full"
+              >
+                {isImporting ? (
+                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                ) : (
+                  <Upload className="h-3 w-3 mr-1" />
+                )}
+                Import
+              </Button>
+            </div>
           </div>
         </div>
 
