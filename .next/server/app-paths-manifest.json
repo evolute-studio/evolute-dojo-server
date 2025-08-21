@@ -1,5 +1,7 @@
 {
-  "/api/admin/health/route": "app/api/admin/health/route.js",
+  "/api/admin/game/create/route": "app/api/admin/game/create/route.js",
   "/page": "app/page.js",
-  "/api/admin/account/route": "app/api/admin/account/route.js"
+  "/api/admin/health/route": "app/api/admin/health/route.js",
+  "/api/admin/account/route": "app/api/admin/account/route.js",
+  "/api/admin/game/actions/route": "app/api/admin/game/actions/route.js"
 }

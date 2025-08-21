@@ -10,7 +10,9 @@
 
 # next.js
 /.next/
-/out/
+.next/
+.vscode/
+.out/
 
 # production
 /build
@@ -79,3 +81,4 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+/.next
