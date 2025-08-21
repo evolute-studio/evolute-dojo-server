@@ -1,8 +1,8 @@
 import { DojoProvider, createDojoConfig } from '@dojoengine/core';
 import { Account, RpcProvider } from 'starknet';
 import { config } from './dojo-config.js';
-import realManifest from '../../src/config/manifest_testing.json';
-import { setupWorld } from '../../src/dojo/contracts.gen.ts';
+import realManifest from './manifest_testing.json';
+import { setupWorld } from './dojo/contracts.gen.ts';
 
 class DojoClient {
   constructor() {
