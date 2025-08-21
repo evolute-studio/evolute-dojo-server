@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { useTheme } from './ThemeProvider';
+import UserInfo from './UserInfo';
 import { 
   FileCode, 
   User, 
@@ -206,7 +207,9 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t space-y-3">
+        <UserInfo />
+        
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm">Status</CardTitle>
@@ -214,7 +217,7 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
           <CardContent className="pt-0">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-xs text-muted-foreground">Connected</span>
+              <span className="text-xs text-muted-foreground">Server Online</span>
             </div>
           </CardContent>
         </Card>
