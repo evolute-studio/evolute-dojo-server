@@ -30,7 +30,8 @@ import {
   Send,
   CheckCircle,
   AlertCircle,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 
 const CONTRACT_ACTIONS = {
@@ -282,6 +283,13 @@ export default function ContractActionsNew({
   const [formData, setFormData] = useState({});
   const [transactionStatus, setTransactionStatus] = useState(null);
 
+  const openTransactionExplorer = (txHash) => {
+    // Get RPC URL from environment or config
+    const rpcUrl = process.env.NEXT_PUBLIC_DOJO_RPC_URL || 'https://api.cartridge.gg/x/dev-evolute-duel/katana';
+    const explorerUrl = `${rpcUrl}/explorer/tx/${txHash}`;
+    window.open(explorerUrl, '_blank');
+  };
+
   const actions = CONTRACT_ACTIONS[selectedContract] || [];
 
   const handleActionSelect = (action) => {
@@ -425,6 +433,187 @@ export default function ContractActionsNew({
     }
   };
 
+  // Special handling for games model
+  if (selectedContract === 'games') {
+    return (
+      <div className="flex-1 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Games Management</h1>
+            <p className="text-muted-foreground">Query and manage game entities</p>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Active Games</CardTitle>
+              <CardDescription>All active games that can be managed</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Mock game entries - replace with real query results */}
+                <div className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold">Game #1</h3>
+                      <p className="text-sm text-muted-foreground">Host: 0x123...abc</p>
+                      <p className="text-sm text-muted-foreground">Status: Waiting for player</p>
+                    </div>
+                    <div className="space-x-2">
+                      <Button size="sm" variant="outline">
+                        View Details
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        Cancel Game
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold">Game #2</h3>
+                      <p className="text-sm text-muted-foreground">Host: 0x456...def</p>
+                      <p className="text-sm text-muted-foreground">Status: In progress</p>
+                    </div>
+                    <div className="space-x-2">
+                      <Button size="sm" variant="outline">
+                        View Details
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        Cancel Game
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center py-4 text-muted-foreground">
+                  <Button variant="outline" onClick={() => {
+                    // TODO: Implement actual query
+                    console.log('Refreshing games...');
+                  }}>
+                    Refresh Games List
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Special handling for system and monitoring sections
+  if (selectedContract === 'system') {
+    return (
+      <div className="flex-1 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">System Information</h1>
+            <p className="text-muted-foreground">System status and configuration details</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Server Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Environment:</span>
+                    <span className="font-mono">Development</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Version:</span>
+                    <span className="font-mono">1.0.0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span className="text-green-600">Active</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuration</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>RPC URL:</span>
+                    <span className="text-green-600">Connected</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>World Address:</span>
+                    <span className="font-mono text-xs">0x023...</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedContract === 'monitoring') {
+    return (
+      <div className="flex-1 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Monitoring & Analytics</h1>
+            <p className="text-muted-foreground">System logs and performance metrics</p>
+          </div>
+          
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <span>Transaction executed</span>
+                    <span className="text-sm text-muted-foreground">2 minutes ago</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    <span>Server health check</span>
+                    <span className="text-sm text-muted-foreground">5 minutes ago</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Metrics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">23</div>
+                    <div className="text-sm text-muted-foreground">Total Games</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">156</div>
+                    <div className="text-sm text-muted-foreground">Transactions</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold">98%</div>
+                    <div className="text-sm text-muted-foreground">Uptime</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!selectedContract) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -546,10 +735,21 @@ export default function ContractActionsNew({
                           </p>
                         )}
                       </div>
-                      <Badge variant={transactionStatus.status === 'success' ? 'default' : 
-                                    transactionStatus.status === 'error' ? 'destructive' : 'secondary'}>
-                        {transactionStatus.status}
-                      </Badge>
+                      {transactionStatus.status === 'success' && transactionStatus.txHash ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openTransactionExplorer(transactionStatus.txHash)}
+                          className="flex items-center space-x-1"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          <span>Explore</span>
+                        </Button>
+                      ) : (
+                        <Badge variant={transactionStatus.status === 'error' ? 'destructive' : 'secondary'}>
+                          {transactionStatus.status}
+                        </Badge>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

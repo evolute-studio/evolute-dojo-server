@@ -5,8 +5,8 @@ import { ThemeProvider } from './components/ThemeProvider'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Evolute Dojo Admin Panel',
-  description: 'Administration panel for Evolute Dojo blockchain game',
+  title: 'Mage Duel Admin Panel',
+  description: 'Administration panel for Mage Duel blockchain game',
 }
 
 export default function RootLayout({ children }) {

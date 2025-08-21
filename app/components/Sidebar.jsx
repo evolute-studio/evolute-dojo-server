@@ -10,7 +10,8 @@ import {
   Activity,
   ChevronRight,
   Sun,
-  Moon
+  Moon,
+  Database
 } from 'lucide-react';
 
 const CONTRACTS = [
@@ -40,6 +41,15 @@ const CONTRACTS = [
   }
 ];
 
+const MODELS = [
+  {
+    id: 'games',
+    name: 'Games',
+    icon: Database,
+    description: 'Query and manage game entities'
+  }
+];
+
 const ADDITIONAL_SECTIONS = [
   {
     id: 'system',
@@ -64,8 +74,8 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
       <div className="p-6 border-b">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-foreground">Dojo Admin</h1>
-            <p className="text-sm text-muted-foreground">Contract Management</p>
+            <h1 className="text-xl font-bold text-foreground">Evolute</h1>
+            <p className="text-sm text-muted-foreground">Admin panel</p>
           </div>
           <Button
             variant="ghost"
@@ -108,6 +118,43 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
                       <div className="font-medium text-sm">{contract.name}</div>
                       <div className="text-xs opacity-75 truncate">
                         {contract.description}
+                      </div>
+                    </div>
+                    {isSelected && (
+                      <ChevronRight className="h-4 w-4 flex-shrink-0" />
+                    )}
+                  </div>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Models Section */}
+        <div>
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+            Models
+          </h2>
+          <div className="space-y-2">
+            {MODELS.map((model) => {
+              const Icon = model.icon;
+              const isSelected = selectedContract === model.id;
+              
+              return (
+                <Button
+                  key={model.id}
+                  variant={isSelected ? "default" : "ghost"}
+                  className={`w-full justify-start h-auto p-3 ${
+                    isSelected ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+                  }`}
+                  onClick={() => onContractSelect(model.id)}
+                >
+                  <div className="flex items-center space-x-3 w-full">
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <div className="flex-1 text-left">
+                      <div className="font-medium text-sm">{model.name}</div>
+                      <div className="text-xs opacity-75 truncate">
+                        {model.description}
                       </div>
                     </div>
                     {isSelected && (
