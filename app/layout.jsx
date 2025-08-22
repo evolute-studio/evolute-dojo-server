@@ -2,6 +2,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from './components/ThemeProvider'
 import { TokenAuthProvider } from './components/TokenAuthProvider'
+import { FirebaseAuthProvider } from './components/FirebaseAuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,11 +16,13 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider>
-          <TokenAuthProvider>
-            <main className="min-h-screen bg-background">
-              {children}
-            </main>
-          </TokenAuthProvider>
+          <FirebaseAuthProvider>
+            <TokenAuthProvider>
+              <main className="min-h-screen bg-background">
+                {children}
+              </main>
+            </TokenAuthProvider>
+          </FirebaseAuthProvider>
         </ThemeProvider>
       </body>
     </html>

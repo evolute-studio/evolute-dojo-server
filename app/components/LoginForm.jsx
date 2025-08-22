@@ -1,97 +1,120 @@
 'use client';
 
 import { useState } from 'react';
+import { useFirebaseAuth } from './FirebaseAuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { useAuth } from './TokenAuthProvider';
-import { Shield, LogIn, Loader2, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from './ui/alert';
+import { Loader2, Shield, AlertCircle, Chrome } from 'lucide-react';
 
 export default function LoginForm() {
-  const [tokenInput, setTokenInput] = useState('');
-  const [error, setError] = useState('');
-  const { login, isLoading } = useAuth();
+  const { login, loading, error, clearError } = useFirebaseAuth();
+  const [isLogging, setIsLogging] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  const handleGoogleLogin = async () => {
+    setIsLogging(true);
+    clearError();
     
-    if (!tokenInput.trim()) {
-      setError('Token is required');
-      return;
-    }
-
-    const result = await login(tokenInput.trim());
-    
-    if (!result.success) {
-      setError(result.error);
+    try {
+      await login();
+    } catch (err) {
+      console.error('Login failed:', err);
+    } finally {
+      setIsLogging(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Shield className="h-6 w-6 text-white" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Admin Access</CardTitle>
-          <CardDescription>
-            Enter your access token to manage the Dojo admin panel
-          </CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="token">Access Token</Label>
-              <Input
-                id="token"
-                type="password"
-                placeholder="Enter your admin token"
-                value={tokenInput}
-                onChange={(e) => setTokenInput(e.target.value)}
-                disabled={isLoading}
-                className={error ? 'border-red-500' : ''}
-              />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-4">
+      <div className="w-full max-w-md space-y-6">
+        {/* Logo/Header */}
+        <div className="text-center space-y-2">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
+              <Shield className="h-8 w-8 text-white" />
             </div>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight">Evolute Admin</h1>
+          <p className="text-muted-foreground">
+            Secure access to blockchain game administration
+          </p>
+        </div>
 
+        {/* Login Card */}
+        <Card className="border-2 shadow-xl">
+          <CardHeader className="space-y-1 text-center">
+            <CardTitle className="text-2xl">Welcome Back</CardTitle>
+            <CardDescription>
+              Sign in with your authorized Google account to continue
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            
+            {/* Error Alert */}
             {error && (
-              <div className="flex items-center space-x-2 text-sm text-red-600 bg-red-50 dark:bg-red-950 p-2 rounded">
+              <Alert variant="destructive" className="mb-4">
                 <AlertCircle className="h-4 w-4" />
-                <span>{error}</span>
-              </div>
+                <AlertDescription>
+                  {error}
+                </AlertDescription>
+              </Alert>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isLoading}
+            {/* Google Login Button */}
+            <Button
+              onClick={handleGoogleLogin}
+              disabled={loading || isLogging}
+              className="w-full h-12 text-base font-medium"
+              size="lg"
             >
-              {isLoading ? (
+              {(loading || isLogging) ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Authenticating...
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                  Signing in...
                 </>
               ) : (
                 <>
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Sign In
+                  <Chrome className="mr-3 h-5 w-5" />
+                  Continue with Google
                 </>
               )}
             </Button>
-          </form>
 
-          <div className="mt-6 text-center">
-            <div className="text-xs text-muted-foreground space-y-1">
-              <p>• Use your admin access token to authenticate</p>
-              <p>• All transactions use server account from environment</p>
-              <p>• Contact your system administrator for token access</p>
+            {/* Info Section */}
+            <div className="pt-4 space-y-3">
+              <div className="border-t pt-4">
+                <div className="text-center space-y-2">
+                  <h3 className="text-sm font-semibold text-muted-foreground">
+                    🔐 Secure Access
+                  </h3>
+                  <ul className="text-xs text-muted-foreground space-y-1">
+                    <li>• Google account authentication</li>
+                    <li>• Email whitelist verification</li>
+                    <li>• Admin panel access only</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground">
+                  Only authorized administrators can access this panel.
+                  <br />
+                  Contact your system administrator if you need access.
+                </p>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center">
+          <p className="text-xs text-muted-foreground">
+            Evolute Dojo Administration Panel
+            <br />
+            Powered by Firebase Authentication
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
