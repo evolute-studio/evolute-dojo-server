@@ -1,7 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
-  "/api/admin/account/route": "app/api/admin/account/route.js",
-  "/api/admin/health/route": "app/api/admin/health/route.js",
-  "/api/admin/games/route": "app/api/admin/games/route.js"
+  "/api/admin/games/route": "app/api/admin/games/route.js",
+  "/api/admin/board/[boardId]/route": "app/api/admin/board/[boardId]/route.js",
+  "/api/admin/players/route": "app/api/admin/players/route.js",
+  "/api/admin/profiles/route": "app/api/admin/profiles/route.js"
 }
