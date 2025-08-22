@@ -2,6 +2,5 @@
   "/page": "app/page.js",
   "/api/admin/health/route": "app/api/admin/health/route.js",
   "/api/admin/account/route": "app/api/admin/account/route.js",
-  "/api/admin/player/route": "app/api/admin/player/route.js",
-  "/api/admin/players/route": "app/api/admin/players/route.js"
+  "/api/admin/contract/route": "app/api/admin/contract/route.js"
 }

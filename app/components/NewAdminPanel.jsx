@@ -80,11 +80,25 @@ export default function NewAdminPanel() {
       let endpoint = '';
       let body = {};
 
+      // Define actions for new contracts
+      const newContractActions = [
+        // EVLT Token actions
+        'mint', 'burn', 'transfer', 'set_minter', 'balance_of',
+        // EVLT Topup actions
+        'mint_evlt', 'mint_evlt_batch', 'grant_minter_role',
+        // GRND Token actions
+        'reward_player',
+        // Matchmaking actions
+        'auto_match', 'join_game', 'cancel_game', 'admin_cancel_game',
+        // Tournament Token actions
+        'enlist_duelist', 'join_duel', 'start_tournament', 'end_tournament'
+      ];
+
       // Determine endpoint and body based on action type
       if (actionType === 'create_game') {
         endpoint = '/api/admin/game/create';
         body = {};
-      } else if (actionType === 'join_game') {
+      } else if (actionType === 'join_game' && selectedContract === 'game') {
         endpoint = '/api/admin/game/join';
         body = { hostPlayer: formData.hostPlayer };
       } else if (actionType === 'server_health') {
@@ -95,6 +109,9 @@ export default function NewAdminPanel() {
         return;
       } else if (isGameAction) {
         endpoint = '/api/admin/game/actions';
+        body = { action: actionType, ...formData };
+      } else if (newContractActions.includes(actionType)) {
+        endpoint = '/api/admin/contract';
         body = { action: actionType, ...formData };
       } else {
         endpoint = '/api/admin/player';

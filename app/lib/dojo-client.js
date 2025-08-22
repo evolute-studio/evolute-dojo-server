@@ -5,6 +5,7 @@ import realManifest from './manifest_testing.json';
 import { setupWorld } from './dojo/contracts.gen.ts';
 
 class DojoClient {
+
   constructor(profileConfig = null) {
     this.provider = null;
     this.dojoProvider = null;
