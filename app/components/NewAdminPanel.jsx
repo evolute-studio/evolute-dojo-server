@@ -104,15 +104,15 @@ export default function NewAdminPanel() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-background">
-      {/* Sidebar */}
+    <div className="h-screen bg-background">
+      {/* Fixed Sidebar */}
       <Sidebar 
         selectedContract={selectedContract}
         onContractSelect={setSelectedContract}
       />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
+      {/* Main Content Area with left margin for fixed sidebar */}
+      <div className="flex flex-col h-screen" style={{ marginLeft: '294px' }}>
         {/* Top Status Bar */}
         <div className="border-b bg-card/50 p-4">
           <div className="flex items-center justify-between">

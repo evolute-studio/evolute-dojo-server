@@ -90,9 +90,9 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
   const { theme, toggleTheme } = useTheme();
   
   return (
-    <div className="bg-card border-r h-full flex flex-col" style={{ width: '294px' }}>
+    <div className="bg-card border-r fixed left-0 top-0 h-screen flex flex-col" style={{ width: '294px' }}>
       {/* Header */}
-      <div className="p-6 border-b">
+      <div className="p-6 border-b flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-foreground">Evolute</h1>
@@ -113,8 +113,8 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
         </div>
       </div>
 
-      {/* Contracts Section */}
-      <div className="flex-1 p-4 space-y-6">
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
         <div>
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
             Contracts
@@ -227,7 +227,7 @@ export default function Sidebar({ selectedContract, onContractSelect }) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t space-y-3">
+      <div className="p-4 border-t space-y-3 flex-shrink-0">
         <UserInfo />
         
         <Card>
