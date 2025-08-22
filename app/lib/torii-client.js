@@ -175,6 +175,82 @@ class ToriiClient {
     }
   }
 
+  async getBoard(boardId) {
+    const query = `
+      query GetBoard($boardId: String!) {
+        evoluteDuelBoardModels(
+          where: { id: { eq: $boardId } }
+          limit: 1
+        ) {
+          edges {
+            node {
+              id
+              player1 {
+                _0
+                _1
+                _2
+              }
+              player2 {
+                _0
+                _1
+                _2
+              }
+              blue_score {
+                _0
+                _1
+              }
+              red_score {
+                _0
+                _1
+              }
+              game_state
+              moves_done
+            }
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { boardId });
+      const boards = data.evoluteDuelBoardModels.edges.map(edge => edge.node);
+      return boards.length > 0 ? boards[0] : null;
+    } catch (error) {
+      console.error('❌ Torii board query failed:', error.message);
+      throw error;
+    }
+  }
+
+  async getPlayers(limit = 10000) {
+    const query = `
+      query GetPlayers($limit: Int) {
+        evoluteDuelPlayerModels(limit: $limit) {
+          edges {
+            node {
+              player_id
+              username
+              balance
+              games_played
+              active_skin
+              role
+              tutorial_completed
+            }
+          }
+        }
+      }
+    `;
+
+    try {
+      const data = await this.query(query, { limit });
+      return {
+        players: data.evoluteDuelPlayerModels.edges.map(edge => edge.node),
+        totalCount: data.evoluteDuelPlayerModels.edges.length
+      };
+    } catch (error) {
+      console.error('❌ Torii players query failed:', error.message);
+      throw error;
+    }
+  }
 
   formatGameStatus(status) {
     const statusMap = {

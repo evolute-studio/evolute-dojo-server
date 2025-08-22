@@ -12,7 +12,9 @@ import {
   ChevronRight,
   Sun,
   Moon,
-  Database
+  Database,
+  Users,
+  BarChart3
 } from 'lucide-react';
 
 const CONTRACTS = [
@@ -48,10 +50,22 @@ const MODELS = [
     name: 'Games',
     icon: Database,
     description: 'Query and manage game entities'
+  },
+  {
+    id: 'players',
+    name: 'Players', 
+    icon: Users,
+    description: 'Query and manage player entities'
   }
 ];
 
 const ADDITIONAL_SECTIONS = [
+  {
+    id: 'analytics',
+    name: 'Analytics',
+    icon: BarChart3,
+    description: 'Game and player analytics dashboard'
+  },
   {
     id: 'system',
     name: 'System Info',

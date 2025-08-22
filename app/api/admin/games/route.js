@@ -39,23 +39,40 @@ async function handleGetGames(request) {
       result = await toriiClient.getGames(limit, offset);
     }
 
-    // Group games by board_id and merge players
+    // Group games by board_id and merge players (only if board_id exists)
     const gamesByBoardId = new Map();
+    const gamesWithoutBoard = [];
     
-    result.games.forEach(game => {
+    result.games.forEach((game, index) => {
       const boardId = toriiClient.formatBoardId(game.board_id);
-      const boardIdKey = boardId || 'no-board';
       
-      if (gamesByBoardId.has(boardIdKey)) {
+      // If no board_id, treat as separate game
+      if (!boardId || boardId === 'null' || boardId === 'undefined') {
+        gamesWithoutBoard.push({
+          status: game.status,
+          gameMode: game.game_mode,
+          boardId: null,
+          boardIdRaw: game.board_id,
+          players: [{
+            address: game.player,
+            formatted: toriiClient.formatAddress(game.player)
+          }],
+          uniqueId: `no-board-${index}` // Unique identifier for games without board
+        });
+        return;
+      }
+      
+      // Group games with valid board_id
+      if (gamesByBoardId.has(boardId)) {
         // Add player to existing game
-        const existingGame = gamesByBoardId.get(boardIdKey);
+        const existingGame = gamesByBoardId.get(boardId);
         existingGame.players.push({
           address: game.player,
           formatted: toriiClient.formatAddress(game.player)
         });
       } else {
         // Create new game entry
-        gamesByBoardId.set(boardIdKey, {
+        gamesByBoardId.set(boardId, {
           status: game.status,
           gameMode: game.game_mode,
           boardId: boardId,
@@ -69,7 +86,7 @@ async function handleGetGames(request) {
     });
 
     // Format grouped games for display
-    const formattedGames = Array.from(gamesByBoardId.entries()).map(([boardIdKey, game], index) => ({
+    const groupedGames = Array.from(gamesByBoardId.entries()).map(([boardIdKey, game], index) => ({
       id: index,
       // Primary player (first player) for compatibility
       player: game.players[0]?.formatted || 'N/A',
@@ -92,10 +109,38 @@ async function handleGetGames(request) {
       guestPlayerFull: game.players[1]?.address || null
     }));
 
+    // Format games without board as individual entries
+    const individualGames = gamesWithoutBoard.map((game, index) => ({
+      id: groupedGames.length + index,
+      // Primary player for compatibility
+      player: game.players[0]?.formatted || 'N/A',
+      playerFull: game.players[0]?.address || '',
+      // Single player game
+      players: game.players,
+      playersCount: game.players.length,
+      // Game info
+      status: toriiClient.formatGameStatus(game.status),
+      statusRaw: game.status,
+      gameMode: toriiClient.formatGameMode(game.gameMode),
+      gameModeRaw: game.gameMode,
+      boardId: game.boardId,
+      boardIdRaw: game.boardIdRaw,
+      // Add some derived fields for compatibility
+      state: toriiClient.formatGameStatus(game.status),
+      hostPlayer: game.players[0]?.formatted || 'N/A',
+      hostPlayerFull: game.players[0]?.address || '',
+      guestPlayer: null,
+      guestPlayerFull: null,
+      uniqueId: game.uniqueId
+    }));
+
+    // Combine grouped games and individual games
+    const allGames = [...groupedGames, ...individualGames];
+
     const response = {
       success: true,
       data: {
-        games: formattedGames,
+        games: allGames,
         totalCount: result.totalCount,
         limit,
         offset,
