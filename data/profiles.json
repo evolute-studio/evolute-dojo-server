@@ -17,8 +17,8 @@
       },
       "isDefault": true,
       "isReadOnly": true,
-      "createdAt": "2025-08-22T12:46:24.907Z",
-      "updatedAt": "2025-08-22T12:46:24.908Z"
+      "createdAt": "2025-08-22T18:04:11.104Z",
+      "updatedAt": "2025-08-22T18:04:11.104Z"
     },
     {
       "id": "meld1jjy633rpxflgdg",
@@ -55,7 +55,25 @@
       },
       "createdAt": "2025-08-22T08:03:09.425Z",
       "updatedAt": "2025-08-22T08:03:09.425Z"
+    },
+    {
+      "id": "men53lr4d7n6t4v60rr",
+      "name": "Tournament",
+      "description": "",
+      "adminAddress": "0x03ec6d1529f9bfe10dfd841453f9cd844b69de963b88af809795b16c91dffd71",
+      "adminPrivateKey": "0x043a6076f29b7a39638d49837453182c2f0c48c612e138a2bed599185a9cde26",
+      "rpcUrl": "https://api.cartridge.gg/x/tournament-evolute-duel/katana",
+      "toriiUrl": "https://api.cartridge.gg/x/tournament-evolute-duel/torii",
+      "worldAddress": "0x0456df5dd00562b48529c589de80c70d0c2a7a73bbfbab6dd2bac7524b332b10",
+      "contracts": {
+        "gameContract": "0x05eee74184c351e4218e9050653f118b169a9c999e40ea5c430f1371658cf403",
+        "playerProfileActions": "0x072bf763c978c6c09fc46f2469c67727dc25e2375f2f1b2d0721350804c616e9",
+        "tutorialContract": "0x02d173bf11e9f8bd5f5933fd098a178742851c3bb14bb2b5429fb5833dbefaf3",
+        "accountMigration": "0x04b1cc0ef650cef04053ad6a00c48a672283244c741aa5ff0667c80b08126f14"
+      },
+      "createdAt": "2025-08-22T18:04:11.104Z",
+      "updatedAt": "2025-08-22T18:04:11.104Z"
     }
   ],
-  "activeProfileId": "meld1jjy633rpxflgdg"
+  "activeProfileId": "men53lr4d7n6t4v60rr"
 }

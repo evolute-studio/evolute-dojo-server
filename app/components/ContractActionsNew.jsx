@@ -220,7 +220,7 @@ const CONTRACT_ACTIONS = {
       description: 'Update player username',
       icon: Settings,
       params: [
-        { name: 'username', type: 'text', required: true, placeholder: 'New username' }
+        { name: 'newUsername', type: 'text', required: true, placeholder: 'New username' }
       ]
     },
     {
