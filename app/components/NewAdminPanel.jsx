@@ -1,13 +1,27 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from './TokenAuthProvider';
+import { useProfileErrorHandler } from '../hooks/useProfileErrorHandler';
 import Sidebar from './Sidebar';
 import ContractActionsNew from './ContractActionsNew';
+import ProfileErrorModal from './ProfileErrorModal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Server, User, Activity } from 'lucide-react';
 
 export default function NewAdminPanel() {
+  const { token } = useAuth();
+  const {
+    errorModalOpen,
+    currentError,
+    errorContext,
+    handleProfileError,
+    retryCurrentProfile,
+    switchToFallback,
+    closeErrorModal
+  } = useProfileErrorHandler();
+  
   const [selectedContract, setSelectedContract] = useState('game');
   const [isLoading, setIsLoading] = useState(false);
   const [accountInfo, setAccountInfo] = useState(null);
@@ -27,18 +41,34 @@ export default function NewAdminPanel() {
 
   // Fetch account info
   const fetchAccountInfo = async () => {
+    if (!token) return;
+    
     try {
       const response = await fetch('/api/admin/account', {
         headers: {
-          'X-API-Key': process.env.NEXT_PUBLIC_API_SECRET_KEY || 'my-secure-api-key-123'
+          'X-API-Key': token
         }
       });
-      const data = await response.json();
-      if (data.success) {
-        setAccountInfo(data.data);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setAccountInfo(data.data);
+        } else {
+          throw new Error(data.error || 'Failed to get account info');
+        }
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
       console.error('Failed to fetch account info:', error);
+      
+      // Handle profile error with fallback logic
+      await handleProfileError(error.message, {
+        currentProfile: getCurrentProfile(),
+        defaultProfile: getDefaultProfile()
+      });
     }
   };
 
@@ -75,7 +105,7 @@ export default function NewAdminPanel() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': process.env.NEXT_PUBLIC_API_SECRET_KEY || 'my-secure-api-key-123'
+          'X-API-Key': token
         },
         body: JSON.stringify(body)
       });
@@ -98,10 +128,40 @@ export default function NewAdminPanel() {
     }
   };
 
+  // Helper functions for profile management
+  const getCurrentProfile = () => {
+    // This would get the current active profile
+    // Implementation depends on how profiles are stored
+    if (typeof window !== 'undefined') {
+      const activeProfileId = localStorage.getItem('activeProfileId');
+      if (activeProfileId) {
+        const profiles = JSON.parse(localStorage.getItem('connectionProfiles') || '[]');
+        return profiles.find(p => p.id === activeProfileId);
+      }
+    }
+    return null;
+  };
+
+  const getDefaultProfile = () => {
+    // This would get the default profile
+    if (typeof window !== 'undefined') {
+      const profiles = JSON.parse(localStorage.getItem('connectionProfiles') || '[]');
+      return profiles.find(p => p.isDefault) || profiles[0];
+    }
+    return null;
+  };
+
+  const handleOpenSettings = () => {
+    setSelectedContract('settings');
+    closeErrorModal();
+  };
+
   useEffect(() => {
     fetchHealth();
-    fetchAccountInfo();
-  }, []);
+    if (token) {
+      fetchAccountInfo();
+    }
+  }, [token]);
 
   return (
     <div className="h-screen bg-background">
@@ -173,6 +233,18 @@ export default function NewAdminPanel() {
           isLoading={isLoading}
         />
       </div>
+
+      {/* Profile Error Modal */}
+      <ProfileErrorModal
+        isOpen={errorModalOpen}
+        onClose={closeErrorModal}
+        error={currentError}
+        currentProfile={errorContext.currentProfile}
+        fallbackProfile={errorContext.fallbackProfile}
+        onRetry={retryCurrentProfile}
+        onSwitchToFallback={switchToFallback}
+        onOpenSettings={handleOpenSettings}
+      />
     </div>
   );
 }

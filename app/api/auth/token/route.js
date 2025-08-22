@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Simple token validation - in production, use JWT or more secure tokens
 const VALID_TOKENS = [
-  process.env.API_SECRET_KEY || 'my-secure-api-key-123',
-  'admin-token-2024',
-  'evolute-admin-access'
+  process.env.API_SECRET_KEY
 ];
 
 export async function POST(request) {

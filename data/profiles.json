@@ -17,8 +17,8 @@
       },
       "isDefault": true,
       "isReadOnly": true,
-      "createdAt": "2025-08-22T08:03:09.425Z",
-      "updatedAt": "2025-08-22T08:03:09.425Z"
+      "createdAt": "2025-08-22T12:46:24.907Z",
+      "updatedAt": "2025-08-22T12:46:24.908Z"
     },
     {
       "id": "meld1jjy633rpxflgdg",
@@ -39,24 +39,6 @@
       "updatedAt": "2025-08-21T12:10:59.518Z"
     },
     {
-      "id": "meld4hymbv1eivi2hy4",
-      "name": "Test",
-      "description": "Test",
-      "adminAddress": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-      "adminPrivateKey": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-      "rpcUrl": "https://api.cartridge.gg/x/dev-evolute-duel/katana",
-      "toriiUrl": "https://api.cartridge.gg/x/dev-evolute-duel/torii",
-      "worldAddress": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-      "contracts": {
-        "gameContract": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-        "playerProfileActions": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-        "tutorialContract": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2",
-        "accountMigration": "0x01e750141e9f10b854d107b81b9b2cb0a7897981d5d7082d4c0b2b068c0f8ac2"
-      },
-      "createdAt": "2025-08-21T12:13:17.422Z",
-      "updatedAt": "2025-08-21T12:13:17.422Z"
-    },
-    {
       "id": "memjmodtimvxahimxkr",
       "name": "Production",
       "description": "Production",
@@ -75,5 +57,5 @@
       "updatedAt": "2025-08-22T08:03:09.425Z"
     }
   ],
-  "activeProfileId": "memjmodtimvxahimxkr"
+  "activeProfileId": "meld1jjy633rpxflgdg"
 }
