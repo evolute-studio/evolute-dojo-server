@@ -7,8 +7,9 @@
 Система працює таким чином:
 1. **Згенеровані контракти** - автоматично генеруються Dojo з `contracts.gen.ts`
 2. **UI конфігурація** - визначає доступні дії в `ContractActionsNew.jsx`
-3. **API роутинг** - направляє дії на правильні ендпоінти
-4. **Виконання** - використовує згенеровані контракти напряму
+3. **Unified Transaction API** - централізована обробка всіх контрактних дій в `/api/admin/transaction`
+4. **CONTRACT_METHODS конфігурація** - мапінг дій на методи контрактів
+5. **Виконання** - використовує згенеровані контракти через Dojo клієнт
 
 ## 1. Сайдбар (розділи контрактів)
 
@@ -83,69 +84,80 @@ import {
 } from 'lucide-react';
 ```
 
-## 3. API роутинг (направлення дій)
+## 3. Unified Transaction API (централізована обробка)
 
-**Файл:** `app/components/NewAdminPanel.jsx`
+**Файл:** `app/api/admin/transaction/route.js`
 
-Додати нові дії до масиву `newContractActions`:
+Вся логіка обробки контрактних дій тепер централізована в unified transaction API. Замість окремих роутів для кожного контракту, використовується один ендпоінт `/api/admin/transaction` з автовизначенням контрактів.
+
+**Переваги:**
+- Автоматичне визначення контракту за назвою дії
+- Централізована валідація параметрів
+- Єдиний формат відповідей
+- Підтримка профілів підключення
+- BigInt серіалізація
+
+## 4. CONTRACT_METHODS конфігурація
+
+**Файл:** `app/api/admin/transaction/route.js`
+
+### 4.1 Додати контракт до CONTRACT_METHODS
+
+Замість switch/case логіки, додати конфігурацію до об'єкта `CONTRACT_METHODS`:
 
 ```javascript
-const newContractActions = [
-  // ... існуючі дії
-  'new_action_1', 'new_action_2', 'read_only_action'
-];
-```
-
-**Примітка:** Всі дії з цього масиву автоматично направляються на `/api/admin/contract`
-
-## 4. API обробка (виконання дій)
-
-**Файл:** `app/api/admin/contract/route.js`
-
-### 4.1 Додати case для кожної дії
-
-```javascript
-switch (action) {
-  // ... існуючі cases
-  
-  case 'new_action':
-    const { param1, param2 } = params;
-    if (!param1 || !param2) {
-      return NextResponse.json({
-        success: false,
-        error: 'param1 and param2 are required'
-      }, { status: 400 });
+const CONTRACT_METHODS = {
+  // ... існуючі контракти
+  new_contract: {
+    new_action: {
+      method: 'actionName',                    // Назва методу в згенерованому контракті
+      params: ['param1', 'param2'],           // Параметри (автовалідація)
+      description: 'Action description',       // Опис для логів
+      isQuery: false,                         // true для read-only функцій
+      contractName: 'actual_contract_name'    // Опційно, якщо відрізняється від ключа
+    },
+    query_action: {
+      method: 'queryFunction',
+      params: ['param1'],
+      description: 'Query description',
+      isQuery: true                           // Read-only функція
     }
-    
-    // Для транзакцій (write)
-    result = await dojoClient.world.new_contract.actionName(
-      dojoClient.adminAccount, param1, param2
-    );
-    
-    // Для запитів (read-only)
-    result = await dojoClient.world.new_contract.queryFunction(param1);
-    
-    message = 'Action completed successfully';
-    break;
-}
+  }
+};
 ```
 
-### 4.2 Типи викликів
+### 4.2 Автоматична обробка
 
-**Транзакції (write):**
+API автоматично:
+- Валідує обов'язкові параметри
+- Визначає тип виклику (query/transaction)
+- Обробляє CairoOption параметри
+- Серіалізує BigInt значення
+- Повертає уніфіковану відповідь
+
+### 4.3 Типи дій та виклики
+
+**Транзакції (write) - isQuery: false:**
 ```javascript
+// Автоматично викликається як:
 result = await dojoClient.world.contract_name.function_name(
-  dojoClient.adminAccount, // Завжди перший параметр
-  param1, param2, ...      // Параметри функції
+  dojoClient.adminAccount, // Автоматично додається
+  ...methodArgs           // Параметри з params масиву
 );
 ```
 
-**Запити (read-only):**
+**Запити (read-only) - isQuery: true:**
 ```javascript
+// Автоматично викликається як:
 result = await dojoClient.world.contract_name.query_function(
-  param1, param2, ...      // Тільки параметри функції
+  ...methodArgs           // Тільки параметри функції
 );
 ```
+
+**Спеціальні випадки:**
+- `useDirectClient: true` - для прямих викликів dojoClient методів
+- `contractName` - якщо назва контракту відрізняється від ключа в CONFIG
+- CairoOption параметри обробляються автоматично
 
 ## 5. Профілі підключення (адреси контрактів)
 
@@ -223,8 +235,8 @@ contracts: {
 - [ ] Імпортовано іконки для контракту та дій
 - [ ] Додано дії до `CONTRACT_ACTIONS` в `ContractActionsNew.jsx`
 - [ ] Додано опис до `contractInfo`
-- [ ] Додано дії до `newContractActions` в `NewAdminPanel.jsx`
-- [ ] Реалізовано API cases в `contract/route.js`
+- [ ] Додано контракт до `CONTRACT_METHODS` в `/api/admin/transaction/route.js`
+- [ ] Протестовано API через GET ендпоінт документації
 - [ ] Додано поля контракту до `ConnectionProfiles.jsx` (3 місця)
 - [ ] Оновлено `createDefaultProfile()` в API профілів (2 файли)
 - [ ] Протестовано всі дії через UI
@@ -243,14 +255,77 @@ contracts: {
 ## 9. Налагодження
 
 1. **Перевірити генерацію контрактів:** `contracts.gen.ts` містить ваш контракт
-2. **Console.log в API:** додати логування результатів
-3. **Network tab:** перевірити запити та відповіді
-4. **Raw Response:** використовувати debug секцію в UI результатів
+2. **API документація:** відвідати `/api/admin/transaction` (GET) для перегляду всіх доступних дій
+3. **Console.log:** логи виконання автоматично додаються з назвою профілю
+4. **Network tab:** перевірити запити та відповіді
+5. **Raw Response:** використовувати debug секцію в UI результатів
+6. **Тестування API:** можна тестувати напряму через fetch або Postman
+
+```javascript
+// Приклад прямого виклику API
+fetch('/api/admin/transaction', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-Key': 'your-api-key'
+  },
+  body: JSON.stringify({
+    action: 'your_action',
+    contract: 'your_contract',  // опційно
+    param1: 'value1'
+  })
+});
+```
 
 ## 10. Найпоширеніші помилки
 
-- **Назви параметрів:** API очікує точно ті ж назви, що в UI
-- **Обов'язкові параметри:** всі required поля повинні бути перевірені
-- **Типи даних:** number поля потребують парсингу 
-- **Array параметри:** JSON масиви потребують парсингу
-- **React відображення:** об'єкти не можна відображати напряму
+**CONTRACT_METHODS конфігурація:**
+- **Неправильна назва методу:** `method` повинен точно відповідати згенерованому контракту
+- **Відсутність параметрів:** всі обов'язкові параметри повинні бути в масиві `params`
+- **Неправильний contractName:** якщо використовується, повинен точно відповідати назві в Dojo world
+
+**API виклики:**
+- **Невірні назви параметрів:** параметри в запиті повинні точно відповідати масиву `params`
+- **Пропущені обов'язкові параметри:** всі required поля автоматично валідуються
+- **Неправильний тип дії:** `isQuery: true` тільки для read-only функцій
+
+**Frontend інтеграція:**
+- **Неправильний contract:** коли викликаєте напряму API, вказуйте правильний contract
+- **BigInt серіалізація:** великі числа автоматично серіалізуються в стрінги
+- **CairoOption обробка:** параметри типу opponent, tournament_id обробляються автоматично
+
+**Відлагодження:**
+- **Перевірити CONTRACT_METHODS:** чи є ваша дія в конфігурації
+- **Console логи:** API автоматично логує виконання з назвою профілю
+- **GET /api/admin/transaction:** подивитися всі доступні дії та їх параметри
+
+## 11. Міграція зі старої архітектури
+
+Якщо у вас є старі контракти в `/api/admin/contract/route.js`:
+
+1. **Знайдіть всі switch cases** для ваших дій
+2. **Конвертуйте в CONTRACT_METHODS** формат
+3. **Видаліть старі switch cases** після тестування
+4. **Оновіть frontend виклики** на `/api/admin/transaction` якщо потрібно
+
+**Приклад міграції:**
+```javascript
+// Старий код в switch case
+case 'mint_tokens':
+  const { recipient, amount } = params;
+  if (!recipient || !amount) {
+    return NextResponse.json({ success: false, error: 'Required params' });
+  }
+  result = await dojoClient.world.my_token.mint(dojoClient.adminAccount, recipient, amount);
+  message = 'Tokens minted successfully';
+  break;
+
+// Новий код в CONTRACT_METHODS
+my_token: {
+  mint_tokens: {
+    method: 'mint',
+    params: ['recipient', 'amount'],
+    description: 'Mint tokens to recipient'
+  }
+}
+```
