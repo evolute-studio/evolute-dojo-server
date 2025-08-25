@@ -14,22 +14,34 @@ import {
   Moon,
   Database,
   Users,
-  BarChart3
+  BarChart3,
+  Coins,
+  Zap,
+  Trophy,
+  Target,
+  Shield
 } from 'lucide-react';
 
 const CONTRACTS = [
-  {
-    id: 'game',
-    name: 'Game Contract',
-    icon: FileCode,
-    description: 'Game logic and mechanics'
-  },
   {
     id: 'player',
     name: 'Player Contract', 
     icon: User,
     description: 'Player management and profiles'
   },
+  {
+    id: 'matchmaking',
+    name: 'Matchmaking',
+    icon: Target,
+    description: 'Game matchmaking and tournament matching'
+  },
+  {
+    id: 'game',
+    name: 'Game Contract',
+    icon: FileCode,
+    description: 'Game logic and mechanics'
+  },
+  
   {
     id: 'tutorial',
     name: 'Tutorial Contract',
@@ -39,8 +51,33 @@ const CONTRACTS = [
   {
     id: 'account_migration',
     name: 'Account Migration',
-    icon: FileCode,
+    icon: Shield,
     description: 'Account migration utilities'
+  },
+  {
+    id: 'evlt_token',
+    name: 'EVLT Token',
+    icon: Coins,
+    description: 'EVLT token operations (mint, burn, transfer)'
+  },
+  {
+    id: 'evlt_topup',
+    name: 'EVLT Topup',
+    icon: Zap,
+    description: 'EVLT token topup and batch operations'
+  },
+  {
+    id: 'grnd_token',
+    name: 'GRND Token',
+    icon: Coins,
+    description: 'GRND token operations and player rewards'
+  },
+  
+  {
+    id: 'tournament_token',
+    name: 'Tournament Token',
+    icon: Trophy,
+    description: 'Tournament NFT passes and operations'
   }
 ];
 

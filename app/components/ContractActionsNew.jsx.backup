@@ -38,7 +38,15 @@ import {
   AlertCircle,
   Clock,
   ExternalLink,
-  Filter
+  Filter,
+  Plus,
+  Minus,
+  Coins,
+  Trophy,
+  Shield,
+  Zap,
+  Target,
+  Search
 } from 'lucide-react';
 
 const CONTRACT_ACTIONS = {
@@ -220,7 +228,7 @@ const CONTRACT_ACTIONS = {
       description: 'Update player username',
       icon: Settings,
       params: [
-        { name: 'username', type: 'text', required: true, placeholder: 'New username' }
+        { name: 'newUsername', type: 'text', required: true, placeholder: 'New username' }
       ]
     },
     {
@@ -279,6 +287,229 @@ const CONTRACT_ACTIONS = {
       params: []
     }
   ],
+  evlt_token: [
+    {
+      id: 'mint',
+      name: 'Mint EVLT',
+      description: 'Mint EVLT tokens to address',
+      icon: Plus,
+      params: [
+        { name: 'recipient', type: 'text', required: true, placeholder: 'Recipient address' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to mint' }
+      ]
+    },
+    {
+      id: 'burn',
+      name: 'Burn EVLT',
+      description: 'Burn EVLT tokens from address',
+      icon: X,
+      params: [
+        { name: 'from', type: 'text', required: true, placeholder: 'Address to burn from' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to burn' }
+      ]
+    },
+    {
+      id: 'transfer',
+      name: 'Transfer EVLT',
+      description: 'Transfer EVLT tokens',
+      icon: Send,
+      params: [
+        { name: 'recipient', type: 'text', required: true, placeholder: 'Recipient address' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to transfer' }
+      ]
+    },
+    {
+      id: 'set_minter',
+      name: 'Set Minter',
+      description: 'Set minter address for EVLT',
+      icon: Settings,
+      params: [
+        { name: 'minter_address', type: 'text', required: true, placeholder: 'Minter address' }
+      ]
+    },
+    {
+      id: 'balance_of',
+      name: 'Check Balance',
+      description: 'Get EVLT token balance for address',
+      icon: Search,
+      params: [
+        { name: 'account', type: 'text', required: true, placeholder: 'Account address' }
+      ],
+      isQuery: true // Mark as read-only call
+    }
+  ],
+  evlt_topup: [
+    {
+      id: 'mint_evlt',
+      name: 'Mint EVLT',
+      description: 'Mint EVLT tokens with source tracking',
+      icon: Plus,
+      params: [
+        { name: 'user', type: 'text', required: true, placeholder: 'User address' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to mint' },
+        { name: 'source', type: 'number', required: true, placeholder: 'Source ID' }
+      ]
+    },
+    {
+      id: 'mint_evlt_batch',
+      name: 'Batch Mint EVLT',
+      description: 'Mint EVLT to multiple users',
+      icon: Users,
+      params: [
+        { name: 'users', type: 'textarea', required: true, placeholder: 'User addresses (JSON array)' },
+        { name: 'amounts', type: 'textarea', required: true, placeholder: 'Amounts (JSON array)' },
+        { name: 'source', type: 'number', required: true, placeholder: 'Source ID' }
+      ]
+    },
+    {
+      id: 'grant_minter_role',
+      name: 'Grant Minter Role',
+      description: 'Grant minter role to account',
+      icon: Settings,
+      params: [
+        { name: 'account', type: 'text', required: true, placeholder: 'Account address' }
+      ]
+    }
+  ],
+  grnd_token: [
+    {
+      id: 'mint',
+      name: 'Mint GRND',
+      description: 'Mint GRND tokens to address',
+      icon: Plus,
+      params: [
+        { name: 'recipient', type: 'text', required: true, placeholder: 'Recipient address' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to mint' }
+      ]
+    },
+    {
+      id: 'burn',
+      name: 'Burn GRND',
+      description: 'Burn GRND tokens from address',
+      icon: X,
+      params: [
+        { name: 'from', type: 'text', required: true, placeholder: 'Address to burn from' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Amount to burn' }
+      ]
+    },
+    {
+      id: 'reward_player',
+      name: 'Reward Player',
+      description: 'Reward player with GRND tokens',
+      icon: CheckCircle,
+      params: [
+        { name: 'player_address', type: 'text', required: true, placeholder: 'Player address' },
+        { name: 'amount', type: 'number', required: true, placeholder: 'Reward amount' }
+      ]
+    },
+    {
+      id: 'set_minter',
+      name: 'Set Minter',
+      description: 'Set minter address for GRND',
+      icon: Settings,
+      params: [
+        { name: 'minter_address', type: 'text', required: true, placeholder: 'Minter address' }
+      ]
+    }
+  ],
+  matchmaking: [
+    {
+      id: 'create_game',
+      name: 'Create Game',
+      description: 'Create new matchmaking game',
+      icon: Play,
+      params: [
+        { name: 'game_mode', type: 'number', required: true, placeholder: 'Game mode (0-2)' },
+        { name: 'opponent', type: 'text', required: false, placeholder: 'Opponent address (optional)' }
+      ]
+    },
+    {
+      id: 'auto_match',
+      name: 'Auto Match',
+      description: 'Find automatic match',
+      icon: Users,
+      params: [
+        { name: 'game_mode', type: 'number', required: true, placeholder: 'Game mode (0-2)' },
+        { name: 'tournament_id', type: 'text', required: false, placeholder: 'Tournament ID (optional)' }
+      ]
+    },
+    {
+      id: 'join_game',
+      name: 'Join Game',
+      description: 'Join existing game',
+      icon: ArrowRight,
+      params: [
+        { name: 'host_player', type: 'text', required: true, placeholder: 'Host player address' }
+      ]
+    },
+    {
+      id: 'cancel_game',
+      name: 'Cancel Game',
+      description: 'Cancel current game',
+      icon: X,
+      params: []
+    },
+    {
+      id: 'admin_cancel_game',
+      name: 'Admin Cancel Game',
+      description: 'Admin cancel player game',
+      icon: AlertCircle,
+      params: [
+        { name: 'player_address', type: 'text', required: true, placeholder: 'Player address' }
+      ]
+    }
+  ],
+  tournament_token: [
+    {
+      id: 'mint',
+      name: 'Mint Tournament Pass',
+      description: 'Mint tournament NFT pass',
+      icon: Plus,
+      params: [
+        { name: 'player_name', type: 'text', required: true, placeholder: 'Player name' },
+        { name: 'settings_id', type: 'number', required: true, placeholder: 'Settings ID' },
+        { name: 'start', type: 'number', required: false, placeholder: 'Start time (optional)' },
+        { name: 'end', type: 'number', required: false, placeholder: 'End time (optional)' },
+        { name: 'to', type: 'text', required: true, placeholder: 'Recipient address' }
+      ]
+    },
+    {
+      id: 'enlist_duelist',
+      name: 'Enlist Duelist',
+      description: 'Enlist in tournament',
+      icon: User,
+      params: [
+        { name: 'pass_id', type: 'number', required: true, placeholder: 'Tournament pass ID' }
+      ]
+    },
+    {
+      id: 'join_duel',
+      name: 'Join Duel',
+      description: 'Join tournament duel',
+      icon: Gamepad2,
+      params: [
+        { name: 'pass_id', type: 'number', required: true, placeholder: 'Tournament pass ID' }
+      ]
+    },
+    {
+      id: 'start_tournament',
+      name: 'Start Tournament',
+      description: 'Start tournament',
+      icon: Play,
+      params: [
+        { name: 'pass_id', type: 'number', required: true, placeholder: 'Tournament pass ID' }
+      ]
+    },
+    {
+      id: 'end_tournament',
+      name: 'End Tournament',
+      description: 'End tournament',
+      icon: Flag,
+      params: [
+        { name: 'pass_id', type: 'number', required: true, placeholder: 'Tournament pass ID' }
+      ]
+    }
+  ],
   settings: [
     {
       id: 'connection_profiles',
@@ -299,6 +530,7 @@ export default function ContractActionsNew({
   const [selectedAction, setSelectedAction] = useState(null);
   const [formData, setFormData] = useState({});
   const [transactionStatus, setTransactionStatus] = useState(null);
+  const [queryResult, setQueryResult] = useState(null);
   const [games, setGames] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -525,6 +757,7 @@ export default function ContractActionsNew({
     setSelectedAction(action);
     setFormData({});
     setTransactionStatus(null);
+    setQueryResult(null);
   };
 
   const handleInputChange = (paramName, value) => {
@@ -538,22 +771,48 @@ export default function ContractActionsNew({
     e.preventDefault();
     if (!selectedAction) return;
 
-    setTransactionStatus({ status: 'pending', message: 'Submitting transaction...' });
+    // Clear previous results
+    setTransactionStatus(null);
+    setQueryResult(null);
 
-    try {
-      const isGameAction = selectedContract === 'game';
-      const result = await onActionExecute(selectedAction.id, formData, isGameAction);
+    if (selectedAction.isQuery) {
+      // Handle read-only calls
+      setTransactionStatus({ status: 'pending', message: 'Executing call...' });
       
-      setTransactionStatus({ 
-        status: 'success', 
-        message: 'Transaction completed successfully',
-        txHash: result?.transactionHash 
-      });
-    } catch (error) {
-      setTransactionStatus({ 
-        status: 'error', 
-        message: `Transaction failed: ${error.message}` 
-      });
+      try {
+        const isGameAction = selectedContract === 'game';
+        const result = await onActionExecute(selectedAction.id, formData, isGameAction);
+        
+        setTransactionStatus({ 
+          status: 'success', 
+          message: 'Call executed successfully' 
+        });
+        setQueryResult(result);
+      } catch (error) {
+        setTransactionStatus({ 
+          status: 'error', 
+          message: `Call failed: ${error.message}` 
+        });
+      }
+    } else {
+      // Handle regular transactions
+      setTransactionStatus({ status: 'pending', message: 'Submitting transaction...' });
+
+      try {
+        const isGameAction = selectedContract === 'game';
+        const result = await onActionExecute(selectedAction.id, formData, isGameAction);
+        
+        setTransactionStatus({ 
+          status: 'success', 
+          message: 'Transaction completed successfully',
+          txHash: result?.transactionHash 
+        });
+      } catch (error) {
+        setTransactionStatus({ 
+          status: 'error', 
+          message: `Transaction failed: ${error.message}` 
+        });
+      }
     }
   };
 
@@ -1185,6 +1444,11 @@ export default function ContractActionsNew({
     account_migration: { title: 'Account Migration', description: 'Handle account migration and data transfer' },
     game: { title: 'Game Contract', description: 'Execute game-related transactions and operations' },
     player: { title: 'Player Contract', description: 'Manage player profiles and settings' },
+    evlt_token: { title: 'EVLT Token', description: 'Manage EVLT token operations (mint, burn, transfer)' },
+    evlt_topup: { title: 'EVLT Topup', description: 'Handle EVLT token topup and batch operations' },
+    grnd_token: { title: 'GRND Token', description: 'Manage GRND token operations and player rewards' },
+    matchmaking: { title: 'Matchmaking', description: 'Manage game matchmaking and tournament matching' },
+    tournament_token: { title: 'Tournament Token', description: 'Manage tournament NFT passes and operations' },
     system: { title: 'System Operations', description: 'Monitor and manage system health' },
     monitoring: { title: 'Monitoring & Analytics', description: 'View logs and performance metrics' }
   };
@@ -1261,10 +1525,12 @@ export default function ContractActionsNew({
                       >
                         {isLoading ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : selectedAction.isQuery ? (
+                          <Search className="mr-2 h-4 w-4" />
                         ) : (
                           <Send className="mr-2 h-4 w-4" />
                         )}
-                        Send Transaction
+                        {selectedAction.isQuery ? 'Execute Call' : 'Send Transaction'}
                       </Button>
                     </div>
                   </form>
@@ -1300,6 +1566,151 @@ export default function ContractActionsNew({
                           {transactionStatus.status}
                         </Badge>
                       )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Call Result Panel */}
+              {queryResult && (
+                <Card className="mt-4 border-2 border-blue-500 bg-blue-50 dark:bg-blue-950">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center space-x-2">
+                      <Search className="h-4 w-4 text-blue-500" />
+                      <span>Call Result</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {selectedAction.id === 'balance_of' && (
+                        <div>
+                          <div className="text-sm text-muted-foreground mb-2">EVLT Token Balance:</div>
+                          <div className="font-mono text-lg font-bold text-blue-600 dark:text-blue-400">
+                            {(() => {
+                              // Extract balance from the result
+                              console.log('Query Result Debug:', queryResult);
+                              
+                              // Direct primitive values
+                              if (typeof queryResult === 'string' || typeof queryResult === 'number') {
+                                return queryResult.toString();
+                              }
+                              
+                              // API response structure check - direct result field
+                              if (queryResult?.result !== undefined) {
+                                const result = queryResult.result;
+                                // Handle different result formats
+                                if (Array.isArray(result) && result.length > 0) {
+                                  // Convert hex to decimal if needed
+                                  const value = result[0];
+                                  if (typeof value === 'string' && value.startsWith('0x')) {
+                                    try {
+                                      return parseInt(value, 16).toString();
+                                    } catch (e) {
+                                      return value;
+                                    }
+                                  }
+                                  return value.toString();
+                                }
+                                // Direct string/number result
+                                if (typeof result === 'string' || typeof result === 'number') {
+                                  return result.toString();
+                                }
+                                return result.toString();
+                              }
+                              
+                              // API response structure check - nested in data
+                              if (queryResult?.data?.result) {
+                                const result = queryResult.data.result;
+                                // Dojo call results are often arrays
+                                if (Array.isArray(result) && result.length > 0) {
+                                  // Convert hex to decimal if needed
+                                  const value = result[0];
+                                  if (typeof value === 'string' && value.startsWith('0x')) {
+                                    try {
+                                      return parseInt(value, 16).toString();
+                                    } catch (e) {
+                                      return value;
+                                    }
+                                  }
+                                  return value.toString();
+                                }
+                                return result.toString();
+                              }
+                              
+                              // Common Dojo response patterns
+                              if (queryResult?.data) {
+                                // Case 1: {data: [balance_value]}
+                                if (Array.isArray(queryResult.data) && queryResult.data.length > 0) {
+                                  return queryResult.data[0].toString();
+                                }
+                                // Case 2: {data: {balance: value}} or {data: balance_value}
+                                if (typeof queryResult.data === 'object') {
+                                  if (queryResult.data.balance !== undefined) {
+                                    return queryResult.data.balance.toString();
+                                  }
+                                  // Try to get first value from object
+                                  const values = Object.values(queryResult.data);
+                                  if (values.length > 0) {
+                                    return values[0].toString();
+                                  }
+                                }
+                                // Case 3: direct value in data
+                                return queryResult.data.toString();
+                              }
+                              
+                              // Case 4: Array response [balance_value]
+                              if (Array.isArray(queryResult) && queryResult.length > 0) {
+                                return queryResult[0].toString();
+                              }
+                              
+                              // Case 5: Object with balance property
+                              if (queryResult?.balance !== undefined) {
+                                return queryResult.balance.toString();
+                              }
+                              
+                              // Case 6: Hex string values (common in Starknet)
+                              if (typeof queryResult === 'object' && queryResult) {
+                                const keys = Object.keys(queryResult);
+                                if (keys.length === 1) {
+                                  const value = queryResult[keys[0]];
+                                  if (typeof value === 'string' && value.startsWith('0x')) {
+                                    // Convert hex to decimal
+                                    try {
+                                      return parseInt(value, 16).toString();
+                                    } catch (e) {
+                                      return value;
+                                    }
+                                  }
+                                  return value.toString();
+                                }
+                              }
+                              
+                              return `Unable to parse: ${typeof queryResult}`;
+                            })()}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            Address: {formData.account}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Raw result for debugging */}
+                      <details className="mt-4" open>
+                        <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground">
+                          Raw Response (Debug) - PLEASE EXPAND
+                        </summary>
+                        <div className="mt-2 space-y-2">
+                          <div className="text-xs">
+                            <strong>Type:</strong> {typeof queryResult}
+                          </div>
+                          <div className="text-xs">
+                            <strong>Keys:</strong> {queryResult && typeof queryResult === 'object' ? Object.keys(queryResult).join(', ') : 'N/A'}
+                          </div>
+                          <pre className="p-3 bg-muted rounded text-xs overflow-auto max-h-64">
+                            {JSON.stringify(queryResult, null, 2)}
+                          </pre>
+                        </div>
+                      </details>
                     </div>
                   </CardContent>
                 </Card>

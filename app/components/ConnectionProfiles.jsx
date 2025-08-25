@@ -42,7 +42,12 @@ export default function ConnectionProfiles() {
       gameContract: '',
       playerProfileActions: '',
       tutorialContract: '',
-      accountMigration: ''
+      accountMigration: '',
+      evltToken: '',
+      evltTopup: '',
+      grndToken: '',
+      matchmaking: '',
+      tournamentToken: ''
     }
   });
   const [errors, setErrors] = useState({});
@@ -71,7 +76,12 @@ export default function ConnectionProfiles() {
           gameContract: selectedProfile.contracts?.gameContract || '',
           playerProfileActions: selectedProfile.contracts?.playerProfileActions || '',
           tutorialContract: selectedProfile.contracts?.tutorialContract || '',
-          accountMigration: selectedProfile.contracts?.accountMigration || ''
+          accountMigration: selectedProfile.contracts?.accountMigration || '',
+          evltToken: selectedProfile.contracts?.evltToken || '',
+          evltTopup: selectedProfile.contracts?.evltTopup || '',
+          grndToken: selectedProfile.contracts?.grndToken || '',
+          matchmaking: selectedProfile.contracts?.matchmaking || '',
+          tournamentToken: selectedProfile.contracts?.tournamentToken || ''
         }
       });
       setErrors({});
@@ -224,7 +234,12 @@ export default function ConnectionProfiles() {
         gameContract: '',
         playerProfileActions: '',
         tutorialContract: '',
-        accountMigration: ''
+        accountMigration: '',
+        evltToken: '',
+        evltTopup: '',
+        grndToken: '',
+        matchmaking: '',
+        tournamentToken: ''
       },
       isNew: true
     };
@@ -699,6 +714,71 @@ export default function ConnectionProfiles() {
                           className={errors['contracts.accountMigration'] ? 'border-red-500' : ''}
                         />
                         {errors['contracts.accountMigration'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.accountMigration']}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="evltToken">EVLT Token</Label>
+                        <Input
+                          id="evltToken"
+                          placeholder="0x..."
+                          value={formData.contracts?.evltToken || ''}
+                          onChange={(e) => handleInputChange('contracts.evltToken', e.target.value)}
+                          disabled={selectedProfile.isReadOnly}
+                          className={errors['contracts.evltToken'] ? 'border-red-500' : ''}
+                        />
+                        {errors['contracts.evltToken'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.evltToken']}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="evltTopup">EVLT Topup</Label>
+                        <Input
+                          id="evltTopup"
+                          placeholder="0x..."
+                          value={formData.contracts?.evltTopup || ''}
+                          onChange={(e) => handleInputChange('contracts.evltTopup', e.target.value)}
+                          disabled={selectedProfile.isReadOnly}
+                          className={errors['contracts.evltTopup'] ? 'border-red-500' : ''}
+                        />
+                        {errors['contracts.evltTopup'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.evltTopup']}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="grndToken">GRND Token</Label>
+                        <Input
+                          id="grndToken"
+                          placeholder="0x..."
+                          value={formData.contracts?.grndToken || ''}
+                          onChange={(e) => handleInputChange('contracts.grndToken', e.target.value)}
+                          disabled={selectedProfile.isReadOnly}
+                          className={errors['contracts.grndToken'] ? 'border-red-500' : ''}
+                        />
+                        {errors['contracts.grndToken'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.grndToken']}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="matchmaking">Matchmaking</Label>
+                        <Input
+                          id="matchmaking"
+                          placeholder="0x..."
+                          value={formData.contracts?.matchmaking || ''}
+                          onChange={(e) => handleInputChange('contracts.matchmaking', e.target.value)}
+                          disabled={selectedProfile.isReadOnly}
+                          className={errors['contracts.matchmaking'] ? 'border-red-500' : ''}
+                        />
+                        {errors['contracts.matchmaking'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.matchmaking']}</p>}
+                      </div>
+
+                      <div>
+                        <Label htmlFor="tournamentToken">Tournament Token</Label>
+                        <Input
+                          id="tournamentToken"
+                          placeholder="0x..."
+                          value={formData.contracts?.tournamentToken || ''}
+                          onChange={(e) => handleInputChange('contracts.tournamentToken', e.target.value)}
+                          disabled={selectedProfile.isReadOnly}
+                          className={errors['contracts.tournamentToken'] ? 'border-red-500' : ''}
+                        />
+                        {errors['contracts.tournamentToken'] && <p className="text-xs text-red-500 mt-1">{errors['contracts.tournamentToken']}</p>}
                       </div>
                     </div>
                   </CardContent>

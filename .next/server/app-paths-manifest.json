@@ -1,6 +1,6 @@
 {
-  "/api/admin/players/route": "app/api/admin/players/route.js",
-  "/api/admin/profiles/route": "app/api/admin/profiles/route.js",
   "/page": "app/page.js",
-  "/api/admin/games/route": "app/api/admin/games/route.js"
+  "/api/admin/health/route": "app/api/admin/health/route.js",
+  "/api/admin/account/route": "app/api/admin/account/route.js",
+  "/api/admin/contract/route": "app/api/admin/contract/route.js"
 }

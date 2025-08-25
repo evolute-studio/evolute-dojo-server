@@ -2,6 +2,45 @@ import type { SchemaType as ISchemaType } from "@dojoengine/sdk";
 
 import { CairoCustomEnum, CairoOption, CairoOptionVariant, BigNumberish } from 'starknet';
 
+// Type definition for `evolute_duel::models::challenge::Challenge` struct
+export interface Challenge {
+	duel_id: BigNumberish;
+	duel_type: DuelTypeEnum;
+	address_a: string;
+	address_b: string;
+	state: ChallengeStateEnum;
+	winner: BigNumberish;
+	timestamps: Period;
+}
+
+// Type definition for `evolute_duel::models::config::CoinConfig` struct
+export interface CoinConfig {
+	coin_address: string;
+	admin_address: string;
+}
+
+// Type definition for `evolute_duel::models::config::EvltConfig` struct
+export interface EvltConfig {
+	config_id: BigNumberish;
+	token_address: string;
+	admin_address: string;
+	total_supply_cap: BigNumberish;
+	is_paused: boolean;
+	staking_enabled: boolean;
+}
+
+// Type definition for `evolute_duel::models::config::GrndConfig` struct
+export interface GrndConfig {
+	config_id: BigNumberish;
+	token_address: string;
+	game_system_address: string;
+	faucet_amount: BigNumberish;
+	faucet_enabled: boolean;
+	reward_multiplier: BigNumberish;
+	daily_reward_cap: BigNumberish;
+	burn_on_upgrade: boolean;
+}
+
 // Type definition for `evolute_duel::models::game::AvailableTiles` struct
 export interface AvailableTiles {
 	board_id: BigNumberish;
@@ -41,6 +80,17 @@ export interface GameConfig {
 	initial_jokers: BigNumberish;
 	time_per_phase: BigNumberish;
 	auto_match: boolean;
+	deck: Array<BigNumberish>;
+	edges: [BigNumberish, BigNumberish];
+	joker_price: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::game::MatchmakingState` struct
+export interface MatchmakingState {
+	game_mode: GameModeEnum;
+	tournament_id: BigNumberish;
+	waiting_players: Array<string>;
+	queue_counter: BigNumberish;
 }
 
 // Type definition for `evolute_duel::models::game::Move` struct
@@ -56,6 +106,14 @@ export interface Move {
 	first_board_id: BigNumberish;
 	timestamp: BigNumberish;
 	top_tile: CairoOption<BigNumberish>;
+}
+
+// Type definition for `evolute_duel::models::game::PlayerMatchmaking` struct
+export interface PlayerMatchmaking {
+	player: string;
+	game_mode: GameModeEnum;
+	tournament_id: BigNumberish;
+	timestamp: BigNumberish;
 }
 
 // Type definition for `evolute_duel::models::game::Rules` struct
@@ -83,6 +141,15 @@ export interface MigrationRequest {
 	status: BigNumberish;
 }
 
+// Type definition for `evolute_duel::models::pact::Pact` struct
+export interface Pact {
+	pair: BigNumberish;
+	duel_type: DuelTypeEnum;
+	player_a: string;
+	player_b: string;
+	timestamp: BigNumberish;
+}
+
 // Type definition for `evolute_duel::models::player::Player` struct
 export interface Player {
 	player_id: string;
@@ -95,6 +162,20 @@ export interface Player {
 	migration_target: string;
 	migration_initiated_at: BigNumberish;
 	migration_used: boolean;
+}
+
+// Type definition for `evolute_duel::models::player::PlayerAssignment` struct
+export interface PlayerAssignment {
+	player_address: string;
+	duel_id: BigNumberish;
+	pass_id: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::scoreboard::Scoreboard` struct
+export interface Scoreboard {
+	tournament_id: BigNumberish;
+	player_address: string;
+	score: BigNumberish;
 }
 
 // Type definition for `evolute_duel::models::scoring::PotentialContests` struct
@@ -121,6 +202,266 @@ export interface UnionNode {
 export interface Shop {
 	shop_id: BigNumberish;
 	skin_prices: Array<BigNumberish>;
+}
+
+// Type definition for `evolute_duel::models::tournament::PlayerTournamentIndex` struct
+export interface PlayerTournamentIndex {
+	player_address: string;
+	tournament_id: BigNumberish;
+	pass_id: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::tournament::TournamentChallenge` struct
+export interface TournamentChallenge {
+	challenge_id: BigNumberish;
+	tournament_id: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::tournament::TournamentPass` struct
+export interface TournamentPass {
+	pass_id: BigNumberish;
+	tournament_id: BigNumberish;
+	player_address: string;
+	entry_number: BigNumberish;
+	rating: BigNumberish;
+	games_played: BigNumberish;
+	wins: BigNumberish;
+	losses: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::tournament::TournamentSettings` struct
+export interface TournamentSettings {
+	settings_id: BigNumberish;
+	tournament_type: EvolveTournamentTypeEnum;
+}
+
+// Type definition for `evolute_duel::models::tournament_balance::TournamentBalance` struct
+export interface TournamentBalance {
+	player_address: string;
+	tournament_id: BigNumberish;
+	eevlt_balance: BigNumberish;
+}
+
+// Type definition for `evolute_duel::types::timestamp::Period` struct
+export interface Period {
+	start: BigNumberish;
+	end: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::game::GameCounter` struct
+export interface GameCounter {
+	key: BigNumberish;
+	count: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::game::GameMetadata` struct
+export interface GameMetadata {
+	contract_address: string;
+	creator_address: string;
+	name: BigNumberish;
+	description: string;
+	developer: BigNumberish;
+	publisher: BigNumberish;
+	genre: BigNumberish;
+	image: string;
+}
+
+// Type definition for `tournaments::components::models::game::Score` struct
+export interface Score {
+	game_id: BigNumberish;
+	score: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::game::Settings` struct
+export interface Settings {
+	id: BigNumberish;
+	name: BigNumberish;
+	value: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::game::SettingsCounter` struct
+export interface SettingsCounter {
+	key: BigNumberish;
+	count: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::game::SettingsDetails` struct
+export interface SettingsDetails {
+	id: BigNumberish;
+	name: BigNumberish;
+	description: string;
+	exists: boolean;
+}
+
+// Type definition for `tournaments::components::models::game::TokenMetadata` struct
+export interface TokenMetadata {
+	token_id: BigNumberish;
+	minted_by: string;
+	player_name: BigNumberish;
+	settings_id: BigNumberish;
+	lifecycle: Lifecycle;
+}
+
+// Type definition for `tournaments::components::models::lifecycle::Lifecycle` struct
+export interface Lifecycle {
+	mint: BigNumberish;
+	start: CairoOption<BigNumberish>;
+	end: CairoOption<BigNumberish>;
+}
+
+// Type definition for `tournaments::components::models::schedule::Period` struct
+export interface Period {
+	start: BigNumberish;
+	end: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::schedule::Schedule` struct
+export interface Schedule {
+	registration: CairoOption<Period>;
+	game: Period;
+	submission_duration: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::ERC20Data` struct
+export interface ERC20Data {
+	amount: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::ERC721Data` struct
+export interface ERC721Data {
+	id: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::EntryCount` struct
+export interface EntryCount {
+	tournament_id: BigNumberish;
+	count: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::EntryFee` struct
+export interface EntryFee {
+	token_address: string;
+	amount: BigNumberish;
+	distribution: Array<BigNumberish>;
+	tournament_creator_share: CairoOption<BigNumberish>;
+	game_creator_share: CairoOption<BigNumberish>;
+}
+
+// Type definition for `tournaments::components::models::tournament::EntryRequirement` struct
+export interface EntryRequirement {
+	entry_limit: BigNumberish;
+	entry_requirement_type: EntryRequirementTypeEnum;
+}
+
+// Type definition for `tournaments::components::models::tournament::GameConfig` struct
+export interface TournamentGameConfig {
+	address: string;
+	settings_id: BigNumberish;
+	prize_spots: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::Leaderboard` struct
+export interface Leaderboard {
+	tournament_id: BigNumberish;
+	token_ids: Array<BigNumberish>;
+}
+
+// Type definition for `tournaments::components::models::tournament::Metadata` struct
+export interface Metadata {
+	name: BigNumberish;
+	description: string;
+}
+
+// Type definition for `tournaments::components::models::tournament::NFTQualification` struct
+export interface NFTQualification {
+	token_id: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::PlatformMetrics` struct
+export interface PlatformMetrics {
+	key: BigNumberish;
+	total_tournaments: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::Prize` struct
+export interface Prize {
+	id: BigNumberish;
+	tournament_id: BigNumberish;
+	payout_position: BigNumberish;
+	token_address: string;
+	token_type: TokenTypeEnum;
+	sponsor_address: string;
+}
+
+// Type definition for `tournaments::components::models::tournament::PrizeClaim` struct
+export interface PrizeClaim {
+	tournament_id: BigNumberish;
+	prize_type: PrizeTypeEnum;
+	claimed: boolean;
+}
+
+// Type definition for `tournaments::components::models::tournament::PrizeMetrics` struct
+export interface PrizeMetrics {
+	key: BigNumberish;
+	total_prizes: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::QualificationEntries` struct
+export interface QualificationEntries {
+	tournament_id: BigNumberish;
+	qualification_proof: QualificationProofEnum;
+	entry_count: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::Registration` struct
+export interface Registration {
+	game_address: string;
+	game_token_id: BigNumberish;
+	tournament_id: BigNumberish;
+	entry_number: BigNumberish;
+	has_submitted: boolean;
+}
+
+// Type definition for `tournaments::components::models::tournament::Token` struct
+export interface Token {
+	address: string;
+	name: string;
+	symbol: string;
+	token_type: TokenTypeEnum;
+	is_registered: boolean;
+}
+
+// Type definition for `tournaments::components::models::tournament::Tournament` struct
+export interface Tournament {
+	id: BigNumberish;
+	created_at: BigNumberish;
+	created_by: string;
+	creator_token_id: BigNumberish;
+	metadata: Metadata;
+	schedule: Schedule;
+	game_config: TournamentGameConfig;
+	entry_fee: CairoOption<EntryFee>;
+	entry_requirement: CairoOption<EntryRequirement>;
+}
+
+// Type definition for `tournaments::components::models::tournament::TournamentConfig` struct
+export interface TournamentConfig {
+	key: BigNumberish;
+	safe_mode: boolean;
+	test_mode: boolean;
+}
+
+// Type definition for `tournaments::components::models::tournament::TournamentQualification` struct
+export interface TournamentQualification {
+	tournament_id: BigNumberish;
+	token_id: BigNumberish;
+	position: BigNumberish;
+}
+
+// Type definition for `tournaments::components::models::tournament::TournamentTokenMetrics` struct
+export interface TournamentTokenMetrics {
+	key: BigNumberish;
+	total_supply: BigNumberish;
 }
 
 // Type definition for `achievement::events::index::TrophyCreation` struct
@@ -402,12 +743,59 @@ export interface TutorialCompleted {
 	completed_at: BigNumberish;
 }
 
+// Type definition for `evolute_duel::models::tournament_balance::EevltBurned` struct
+export interface EevltBurned {
+	player_address: string;
+	tournament_id: BigNumberish;
+	amount: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::tournament_balance::EevltMinted` struct
+export interface EevltMinted {
+	player_address: string;
+	tournament_id: BigNumberish;
+	amount: BigNumberish;
+}
+
+// Type definition for `evolute_duel::models::challenge::DuelType` enum
+export const duelType = [
+	'Undefined',
+	'Regular',
+	'Tournament',
+] as const;
+export type DuelType = { [key in typeof duelType[number]]: string };
+export type DuelTypeEnum = CairoCustomEnum;
+
+// Type definition for `evolute_duel::models::tournament::TournamentType` enum
+export const evolveTournamentType = [
+	'Undefined',
+	'LastManStanding',
+	'BestOfThree',
+] as const;
+export type EvolveTournamentType = { [key in typeof evolveTournamentType[number]]: string };
+export type EvolveTournamentTypeEnum = CairoCustomEnum;
+
+// Type definition for `evolute_duel::types::challenge_state::ChallengeState` enum
+export const challengeState = [
+	'Null',
+	'Awaiting',
+	'Withdrawn',
+	'Refused',
+	'Expired',
+	'InProgress',
+	'Resolved',
+	'Draw',
+] as const;
+export type ChallengeState = { [key in typeof challengeState[number]]: string };
+export type ChallengeStateEnum = CairoCustomEnum;
+
 // Type definition for `evolute_duel::types::packing::GameMode` enum
 export const gameMode = [
 	'None',
 	'Tutorial',
 	'Ranked',
 	'Casual',
+	'Tournament',
 ] as const;
 export type GameMode = { [key in typeof gameMode[number]]: string };
 export type GameModeEnum = CairoCustomEnum;
@@ -452,20 +840,129 @@ export const tEdge = [
 export type TEdge = { [key in typeof tEdge[number]]: string };
 export type TEdgeEnum = CairoCustomEnum;
 
+// Type definition for `tournaments::components::models::tournament::EntryRequirementType` enum
+export const entryRequirementType = [
+	'token',
+	'tournament',
+	'allowlist',
+] as const;
+export type EntryRequirementType = { 
+	token: string,
+	tournament: TournamentComponentTypeEnum,
+	allowlist: Array<string>,
+};
+export type EntryRequirementTypeEnum = CairoCustomEnum;
+
+// Type definition for `tournaments::components::models::tournament::PrizeType` enum
+export const prizeType = [
+	'EntryFees',
+	'Sponsored',
+] as const;
+export type PrizeType = { 
+	EntryFees: RoleEnum,
+	Sponsored: BigNumberish,
+};
+export type PrizeTypeEnum = CairoCustomEnum;
+
+// Type definition for `tournaments::components::models::tournament::QualificationProof` enum
+export const qualificationProof = [
+	'Tournament',
+	'NFT',
+	'Address',
+] as const;
+export type QualificationProof = { 
+	Tournament: TournamentQualification,
+	NFT: NFTQualification,
+	Address: string,
+};
+export type QualificationProofEnum = CairoCustomEnum;
+
+// Type definition for `tournaments::components::models::tournament::Role` enum
+export const role = [
+	'TournamentCreator',
+	'GameCreator',
+	'Position',
+] as const;
+export type Role = { [key in typeof role[number]]: string };
+export type RoleEnum = CairoCustomEnum;
+
+// Type definition for `tournaments::components::models::tournament::TokenType` enum
+export const tokenType = [
+	'erc20',
+	'erc721',
+] as const;
+export type TokenType = { 
+	erc20: ERC20Data,
+	erc721: ERC721Data,
+};
+export type TokenTypeEnum = CairoCustomEnum;
+
+// Type definition for `tournaments::components::models::tournament::TournamentType` enum
+export const tournamentComponentType = [
+	'winners',
+	'participants',
+] as const;
+export type TournamentComponentType = { [key in typeof tournamentComponentType[number]]: string };
+export type TournamentComponentTypeEnum = CairoCustomEnum;
+
 export interface SchemaType extends ISchemaType {
 	evolute_duel: {
+		Challenge: Challenge,
+		CoinConfig: CoinConfig,
+		EvltConfig: EvltConfig,
+		GrndConfig: GrndConfig,
 		AvailableTiles: AvailableTiles,
 		Board: Board,
 		Game: Game,
 		GameConfig: GameConfig,
+		TournamentGameConfig: TournamentGameConfig,
+		MatchmakingState: MatchmakingState,
 		Move: Move,
+		PlayerMatchmaking: PlayerMatchmaking,
 		Rules: Rules,
 		TileCommitments: TileCommitments,
 		MigrationRequest: MigrationRequest,
+		Pact: Pact,
 		Player: Player,
+		PlayerAssignment: PlayerAssignment,
+		Scoreboard: Scoreboard,
 		PotentialContests: PotentialContests,
 		UnionNode: UnionNode,
 		Shop: Shop,
+		PlayerTournamentIndex: PlayerTournamentIndex,
+		TournamentChallenge: TournamentChallenge,
+		TournamentPass: TournamentPass,
+		TournamentSettings: TournamentSettings,
+		TournamentBalance: TournamentBalance,
+		Period: Period,
+		GameCounter: GameCounter,
+		GameMetadata: GameMetadata,
+		Score: Score,
+		Settings: Settings,
+		SettingsCounter: SettingsCounter,
+		SettingsDetails: SettingsDetails,
+		TokenMetadata: TokenMetadata,
+		Lifecycle: Lifecycle,
+		Schedule: Schedule,
+		ERC20Data: ERC20Data,
+		ERC721Data: ERC721Data,
+		EntryCount: EntryCount,
+		EntryFee: EntryFee,
+		EntryRequirement: EntryRequirement,
+		Leaderboard: Leaderboard,
+		Metadata: Metadata,
+		NFTQualification: NFTQualification,
+		PlatformMetrics: PlatformMetrics,
+		Prize: Prize,
+		PrizeClaim: PrizeClaim,
+		PrizeMetrics: PrizeMetrics,
+		QualificationEntries: QualificationEntries,
+		Registration: Registration,
+		Token: Token,
+		Tournament: Tournament,
+		TournamentConfig: TournamentConfig,
+		TournamentQualification: TournamentQualification,
+		TournamentTokenMetrics: TournamentTokenMetrics,
 		TrophyCreation: TrophyCreation,
 		TrophyProgression: TrophyProgression,
 		Task: Task,
@@ -501,10 +998,54 @@ export interface SchemaType extends ISchemaType {
 		SnapshotCreateFailed: SnapshotCreateFailed,
 		SnapshotCreated: SnapshotCreated,
 		TutorialCompleted: TutorialCompleted,
+		EevltBurned: EevltBurned,
+		EevltMinted: EevltMinted,
 	},
 }
 export const schema: SchemaType = {
 	evolute_duel: {
+		Challenge: {
+			duel_id: 0,
+		duel_type: new CairoCustomEnum({ 
+					Undefined: "",
+				Regular: undefined,
+				Tournament: undefined, }),
+			address_a: "",
+			address_b: "",
+		state: new CairoCustomEnum({ 
+					Null: "",
+				Awaiting: undefined,
+				Withdrawn: undefined,
+				Refused: undefined,
+				Expired: undefined,
+				InProgress: undefined,
+				Resolved: undefined,
+				Draw: undefined, }),
+			winner: 0,
+		timestamps: { start: 0, end: 0, },
+		},
+		CoinConfig: {
+			coin_address: "",
+			admin_address: "",
+		},
+		EvltConfig: {
+			config_id: 0,
+			token_address: "",
+			admin_address: "",
+		total_supply_cap: 0,
+			is_paused: false,
+			staking_enabled: false,
+		},
+		GrndConfig: {
+			config_id: 0,
+			token_address: "",
+			game_system_address: "",
+			faucet_amount: 0,
+			faucet_enabled: false,
+			reward_multiplier: 0,
+		daily_reward_cap: 0,
+			burn_on_upgrade: false,
+		},
 		AvailableTiles: {
 			board_id: 0,
 			player: "",
@@ -514,8 +1055,8 @@ export const schema: SchemaType = {
 			id: 0,
 			available_tiles_in_deck: [0],
 		top_tile: new CairoOption(CairoOptionVariant.None),
-			player1: ["", { None: "", Blue: undefined, Red: undefined }, 0],
-			player2: ["", { None: "", Blue: undefined, Red: undefined }, 0],
+			player1: ["", { None: "", Blue: "", Red: "" }, 0],
+			player2: ["", { None: "", Blue: "", Red: "" }, 0],
 			blue_score: [0, 0],
 			red_score: [0, 0],
 		last_move_id: new CairoOption(CairoOptionVariant.None),
@@ -541,19 +1082,35 @@ export const schema: SchemaType = {
 					None: "",
 				Tutorial: undefined,
 				Ranked: undefined,
-				Casual: undefined, }),
+				Casual: undefined,
+				Tournament: undefined, }),
 		},
 		GameConfig: {
 		game_mode: new CairoCustomEnum({ 
 					None: "",
 				Tutorial: undefined,
 				Ranked: undefined,
-				Casual: undefined, }),
+				Casual: undefined,
+				Tournament: undefined, }),
 			board_size: 0,
 			deck_type: 0,
 			initial_jokers: 0,
 			time_per_phase: 0,
 			auto_match: false,
+			deck: [0],
+			edges: [0, 0],
+			joker_price: 0,
+		},
+		MatchmakingState: {
+		game_mode: new CairoCustomEnum({ 
+					None: "",
+				Tutorial: undefined,
+				Ranked: undefined,
+				Casual: undefined,
+				Tournament: undefined, }),
+			tournament_id: 0,
+			waiting_players: [""],
+			queue_counter: 0,
 		},
 		Move: {
 			id: 0,
@@ -570,6 +1127,17 @@ export const schema: SchemaType = {
 			first_board_id: 0,
 			timestamp: 0,
 		top_tile: new CairoOption(CairoOptionVariant.None),
+		},
+		PlayerMatchmaking: {
+			player: "",
+		game_mode: new CairoCustomEnum({ 
+					None: "",
+				Tutorial: undefined,
+				Ranked: undefined,
+				Casual: undefined,
+				Tournament: undefined, }),
+			tournament_id: 0,
+			timestamp: 0,
 		},
 		Rules: {
 			id: 0,
@@ -590,6 +1158,16 @@ export const schema: SchemaType = {
 			expires_at: 0,
 			status: 0,
 		},
+		Pact: {
+			pair: 0,
+		duel_type: new CairoCustomEnum({ 
+					Undefined: "",
+				Regular: undefined,
+				Tournament: undefined, }),
+			player_a: "",
+			player_b: "",
+			timestamp: 0,
+		},
 		Player: {
 			player_id: "",
 			username: 0,
@@ -601,6 +1179,16 @@ export const schema: SchemaType = {
 			migration_target: "",
 			migration_initiated_at: 0,
 			migration_used: false,
+		},
+		PlayerAssignment: {
+			player_address: "",
+			duel_id: 0,
+			pass_id: 0,
+		},
+		Scoreboard: {
+			tournament_id: 0,
+			player_address: "",
+			score: 0,
 		},
 		PotentialContests: {
 			board_id: 0,
@@ -628,6 +1216,208 @@ export const schema: SchemaType = {
 		Shop: {
 			shop_id: 0,
 			skin_prices: [0],
+		},
+		PlayerTournamentIndex: {
+			player_address: "",
+			tournament_id: 0,
+			pass_id: 0,
+		},
+		TournamentChallenge: {
+			challenge_id: 0,
+			tournament_id: 0,
+		},
+		TournamentPass: {
+			pass_id: 0,
+			tournament_id: 0,
+			player_address: "",
+			entry_number: 0,
+			rating: 0,
+			games_played: 0,
+			wins: 0,
+			losses: 0,
+		},
+		TournamentSettings: {
+			settings_id: 0,
+		tournament_type: new CairoCustomEnum({ 
+					Undefined: "",
+				LastManStanding: undefined,
+				BestOfThree: undefined, }),
+		},
+		TournamentBalance: {
+			player_address: "",
+			tournament_id: 0,
+			eevlt_balance: 0,
+		},
+		Period: {
+			start: 0,
+			end: 0,
+		},
+		GameCounter: {
+			key: 0,
+			count: 0,
+		},
+		GameMetadata: {
+			contract_address: "",
+			creator_address: "",
+			name: 0,
+		description: "",
+			developer: 0,
+			publisher: 0,
+			genre: 0,
+		image: "",
+		},
+		Score: {
+			game_id: 0,
+			score: 0,
+		},
+		Settings: {
+			id: 0,
+			name: 0,
+			value: 0,
+		},
+		SettingsCounter: {
+			key: 0,
+			count: 0,
+		},
+		SettingsDetails: {
+			id: 0,
+			name: 0,
+		description: "",
+			exists: false,
+		},
+		TokenMetadata: {
+			token_id: 0,
+			minted_by: "",
+			player_name: 0,
+			settings_id: 0,
+		lifecycle: { mint: 0, start: new CairoOption(CairoOptionVariant.None), end: new CairoOption(CairoOptionVariant.None), },
+		},
+		Lifecycle: {
+			mint: 0,
+		start: new CairoOption(CairoOptionVariant.None),
+		end: new CairoOption(CairoOptionVariant.None),
+		},
+		Schedule: {
+		registration: new CairoOption(CairoOptionVariant.None),
+		game: { start: 0, end: 0, },
+			submission_duration: 0,
+		},
+		ERC20Data: {
+			amount: 0,
+		},
+		ERC721Data: {
+			id: 0,
+		},
+		EntryCount: {
+			tournament_id: 0,
+			count: 0,
+		},
+		EntryFee: {
+			token_address: "",
+			amount: 0,
+			distribution: [0],
+		tournament_creator_share: new CairoOption(CairoOptionVariant.None),
+		game_creator_share: new CairoOption(CairoOptionVariant.None),
+		},
+		EntryRequirement: {
+			entry_limit: 0,
+		entry_requirement_type: new CairoCustomEnum({ 
+					token: "",
+				tournament: undefined,
+				allowlist: undefined, }),
+		},
+		TournamentGameConfig: {
+			address: "",
+			settings_id: 0,
+			prize_spots: 0,
+		},
+		Leaderboard: {
+			tournament_id: 0,
+			token_ids: [0],
+		},
+		Metadata: {
+			name: 0,
+		description: "",
+		},
+		NFTQualification: {
+		token_id: 0,
+		},
+		PlatformMetrics: {
+			key: 0,
+			total_tournaments: 0,
+		},
+		Prize: {
+			id: 0,
+			tournament_id: 0,
+			payout_position: 0,
+			token_address: "",
+		token_type: new CairoCustomEnum({ 
+				erc20: { amount: 0, },
+				erc721: undefined, }),
+			sponsor_address: "",
+		},
+		PrizeClaim: {
+			tournament_id: 0,
+		prize_type: new CairoCustomEnum({ 
+				EntryFees: new CairoCustomEnum({ 
+					TournamentCreator: "",
+				GameCreator: undefined,
+				Position: undefined, }),
+				Sponsored: undefined, }),
+			claimed: false,
+		},
+		PrizeMetrics: {
+			key: 0,
+			total_prizes: 0,
+		},
+		QualificationEntries: {
+			tournament_id: 0,
+		qualification_proof: new CairoCustomEnum({ 
+				Tournament: { tournament_id: 0, token_id: 0, position: 0, },
+				NFT: undefined,
+				Address: undefined, }),
+			entry_count: 0,
+		},
+		Registration: {
+			game_address: "",
+			game_token_id: 0,
+			tournament_id: 0,
+			entry_number: 0,
+			has_submitted: false,
+		},
+		Token: {
+			address: "",
+		name: "",
+		symbol: "",
+		token_type: new CairoCustomEnum({ 
+				erc20: { amount: 0, },
+				erc721: undefined, }),
+			is_registered: false,
+		},
+		Tournament: {
+			id: 0,
+			created_at: 0,
+			created_by: "",
+			creator_token_id: 0,
+		metadata: { name: 0, description: "", },
+		schedule: { registration: new CairoOption(CairoOptionVariant.None), game: { start: 0, end: 0, }, submission_duration: 0, },
+		game_config: { address: "", settings_id: 0, prize_spots: 0, },
+		entry_fee: new CairoOption(CairoOptionVariant.None),
+		entry_requirement: new CairoOption(CairoOptionVariant.None),
+		},
+		TournamentConfig: {
+			key: 0,
+			safe_mode: false,
+			test_mode: false,
+		},
+		TournamentQualification: {
+			tournament_id: 0,
+			token_id: 0,
+			position: 0,
+		},
+		TournamentTokenMetrics: {
+			key: 0,
+			total_supply: 0,
 		},
 		TrophyCreation: {
 			id: 0,
@@ -657,8 +1447,8 @@ export const schema: SchemaType = {
 		BoardUpdated: {
 			board_id: 0,
 		top_tile: new CairoOption(CairoOptionVariant.None),
-			player1: ["", { None: "", Blue: undefined, Red: undefined }, 0],
-			player2: ["", { None: "", Blue: undefined, Red: undefined }, 0],
+			player1: ["", { None: "", Blue: "", Red: "" }, 0],
+			player2: ["", { None: "", Blue: "", Red: "" }, 0],
 			blue_score: [0, 0],
 			red_score: [0, 0],
 		last_move_id: new CairoOption(CairoOptionVariant.None),
@@ -878,26 +1668,90 @@ export const schema: SchemaType = {
 			player_id: "",
 			completed_at: 0,
 		},
+		EevltBurned: {
+			player_address: "",
+			tournament_id: 0,
+			amount: 0,
+		},
+		EevltMinted: {
+			player_address: "",
+			tournament_id: 0,
+			amount: 0,
+		},
 	},
 };
 export enum ModelsMapping {
+	Challenge = 'evolute_duel-Challenge',
+	DuelType = 'evolute_duel-DuelType',
+	CoinConfig = 'evolute_duel-CoinConfig',
+	EvltConfig = 'evolute_duel-EvltConfig',
+	GrndConfig = 'evolute_duel-GrndConfig',
 	AvailableTiles = 'evolute_duel-AvailableTiles',
 	Board = 'evolute_duel-Board',
 	Game = 'evolute_duel-Game',
 	GameConfig = 'evolute_duel-GameConfig',
+	MatchmakingState = 'evolute_duel-MatchmakingState',
 	Move = 'evolute_duel-Move',
+	PlayerMatchmaking = 'evolute_duel-PlayerMatchmaking',
 	Rules = 'evolute_duel-Rules',
 	TileCommitments = 'evolute_duel-TileCommitments',
 	MigrationRequest = 'evolute_duel-MigrationRequest',
+	Pact = 'evolute_duel-Pact',
 	Player = 'evolute_duel-Player',
+	PlayerAssignment = 'evolute_duel-PlayerAssignment',
+	Scoreboard = 'evolute_duel-Scoreboard',
 	PotentialContests = 'evolute_duel-PotentialContests',
 	UnionNode = 'evolute_duel-UnionNode',
 	Shop = 'evolute_duel-Shop',
+	PlayerTournamentIndex = 'evolute_duel-PlayerTournamentIndex',
+	TournamentChallenge = 'evolute_duel-TournamentChallenge',
+	TournamentPass = 'evolute_duel-TournamentPass',
+	TournamentSettings = 'evolute_duel-TournamentSettings',
+	EvolveTournamentType = 'evolute_duel-TournamentType',
+	TournamentBalance = 'evolute_duel-TournamentBalance',
+	ChallengeState = 'evolute_duel-ChallengeState',
 	GameMode = 'evolute_duel-GameMode',
 	GameState = 'evolute_duel-GameState',
 	GameStatus = 'evolute_duel-GameStatus',
 	PlayerSide = 'evolute_duel-PlayerSide',
 	TEdge = 'evolute_duel-TEdge',
+	EvolvePeriod = 'evolute_duel-Period',
+	GameCounter = 'tournaments-GameCounter',
+	GameMetadata = 'tournaments-GameMetadata',
+	Score = 'tournaments-Score',
+	Settings = 'tournaments-Settings',
+	SettingsCounter = 'tournaments-SettingsCounter',
+	SettingsDetails = 'tournaments-SettingsDetails',
+	TokenMetadata = 'tournaments-TokenMetadata',
+	Lifecycle = 'tournaments-Lifecycle',
+	TournamentPeriod = 'tournaments-Period',
+	Schedule = 'tournaments-Schedule',
+	ERC20Data = 'tournaments-ERC20Data',
+	ERC721Data = 'tournaments-ERC721Data',
+	EntryCount = 'tournaments-EntryCount',
+	EntryFee = 'tournaments-EntryFee',
+	EntryRequirement = 'tournaments-EntryRequirement',
+	EntryRequirementType = 'tournaments-EntryRequirementType',
+	TournamentGameConfig = 'tournaments-GameConfig',
+	Leaderboard = 'tournaments-Leaderboard',
+	Metadata = 'tournaments-Metadata',
+	NFTQualification = 'tournaments-NFTQualification',
+	PlatformMetrics = 'tournaments-PlatformMetrics',
+	Prize = 'tournaments-Prize',
+	PrizeClaim = 'tournaments-PrizeClaim',
+	PrizeMetrics = 'tournaments-PrizeMetrics',
+	PrizeType = 'tournaments-PrizeType',
+	QualificationEntries = 'tournaments-QualificationEntries',
+	QualificationProof = 'tournaments-QualificationProof',
+	Registration = 'tournaments-Registration',
+	Role = 'tournaments-Role',
+	Token = 'tournaments-Token',
+	TokenType = 'tournaments-TokenType',
+	Tournament = 'tournaments-Tournament',
+	TournamentConfig = 'tournaments-TournamentConfig',
+	TournamentQualification = 'tournaments-TournamentQualification',
+	TournamentTokenMetrics = 'tournaments-TournamentTokenMetrics',
+	TournamentComponentType = 'tournaments-TournamentType',
 	TrophyCreation = 'achievement-TrophyCreation',
 	TrophyProgression = 'achievement-TrophyProgression',
 	Task = 'achievement-Task',
@@ -933,4 +1787,6 @@ export enum ModelsMapping {
 	SnapshotCreateFailed = 'evolute_duel-SnapshotCreateFailed',
 	SnapshotCreated = 'evolute_duel-SnapshotCreated',
 	TutorialCompleted = 'evolute_duel-TutorialCompleted',
+	EevltBurned = 'evolute_duel-EevltBurned',
+	EevltMinted = 'evolute_duel-EevltMinted',
 }

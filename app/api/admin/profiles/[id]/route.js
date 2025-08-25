@@ -19,7 +19,12 @@ function createDefaultProfile() {
       gameContract: process.env.GAME_CONTRACT_ADDRESS || 'Not configured',
       playerProfileActions: process.env.PLAYER_PROFILE_ACTIONS_ADDRESS || 'Not configured',
       tutorialContract: process.env.TUTORIAL_CONTRACT_ADDRESS || 'Not configured',
-      accountMigration: process.env.ACCOUNT_MIGRATION_ADDRESS || 'Not configured'
+      accountMigration: process.env.ACCOUNT_MIGRATION_ADDRESS || 'Not configured',
+      evltToken: process.env.EVLT_TOKEN_ADDRESS || '',
+      evltTopup: process.env.EVLT_TOPUP_ADDRESS || '',
+      grndToken: process.env.GRND_TOKEN_ADDRESS || '',
+      matchmaking: process.env.MATCHMAKING_ADDRESS || '',
+      tournamentToken: process.env.TOURNAMENT_TOKEN_ADDRESS || ''
     },
     isDefault: true,
     isReadOnly: true,

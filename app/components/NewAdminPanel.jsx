@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './TokenAuthProvider';
 import { useProfileErrorHandler } from '../hooks/useProfileErrorHandler';
 import Sidebar from './Sidebar';
-import ContractActionsNew from './ContractActionsNew';
+import ContractActionsNew from './contract-actions/ContractActionsNew';
 import ProfileErrorModal from './ProfileErrorModal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -72,34 +72,35 @@ export default function NewAdminPanel() {
     }
   };
 
-  // Execute action based on contract type
+  // Execute action using unified transaction API
   const executeAction = async (actionType, formData, isGameAction) => {
     setIsLoading(true);
     
     try {
-      let endpoint = '';
-      let body = {};
-
-      // Determine endpoint and body based on action type
-      if (actionType === 'create_game') {
-        endpoint = '/api/admin/game/create';
-        body = {};
-      } else if (actionType === 'join_game') {
-        endpoint = '/api/admin/game/join';
-        body = { hostPlayer: formData.hostPlayer };
-      } else if (actionType === 'server_health') {
+      // Handle special system actions
+      if (actionType === 'server_health') {
         await fetchHealth();
         return;
-      } else if (actionType === 'refresh_data') {
+      }
+      
+      if (actionType === 'refresh_data') {
         await Promise.all([fetchHealth(), fetchAccountInfo()]);
         return;
-      } else if (isGameAction) {
-        endpoint = '/api/admin/game/actions';
-        body = { action: actionType, ...formData };
-      } else {
-        endpoint = '/api/admin/player';
-        body = { action: actionType, ...formData };
       }
+
+      // Use unified transaction endpoint for all contract actions
+      const endpoint = '/api/admin/transaction';
+      const body = {
+        action: actionType,
+        ...formData
+      };
+
+      // Auto-detect contract based on current selected contract
+      if (selectedContract && selectedContract !== 'settings') {
+        body.contract = selectedContract;
+      }
+
+      console.log('Executing action:', { actionType, selectedContract, formData });
 
       const response = await fetch(endpoint, {
         method: 'POST',

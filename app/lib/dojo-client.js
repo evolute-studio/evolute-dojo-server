@@ -5,6 +5,7 @@ import realManifest from './manifest_testing.json';
 import { setupWorld } from './dojo/contracts.gen.ts';
 
 class DojoClient {
+
   constructor(profileConfig = null) {
     this.provider = null;
     this.dojoProvider = null;
@@ -90,20 +91,6 @@ class DojoClient {
   }
 
   // Game actions using generated contracts
-  async createGame() {
-    await this.initialize();
-    return await this.world.game.createGame(this.adminAccount);
-  }
-
-  async joinGame(hostPlayer) {
-    await this.initialize();
-    return await this.world.game.joinGame(this.adminAccount, hostPlayer);
-  }
-
-  async cancelGame() {
-    await this.initialize();
-    return await this.world.game.cancelGame(this.adminAccount);
-  }
 
   async makeMove(jokerTile, rotation, col, row) {
     await this.initialize();
