@@ -232,7 +232,7 @@ export interface TournamentPass {
 // Type definition for `evolute_duel::models::tournament::TournamentSettings` struct
 export interface TournamentSettings {
 	settings_id: BigNumberish;
-	tournament_type: TournamentTypeEnum;
+	tournament_type: EvolveTournamentTypeEnum;
 }
 
 // Type definition for `evolute_duel::models::tournament_balance::TournamentBalance` struct
@@ -354,7 +354,7 @@ export interface EntryRequirement {
 }
 
 // Type definition for `tournaments::components::models::tournament::GameConfig` struct
-export interface GameConfig {
+export interface TournamentGameConfig {
 	address: string;
 	settings_id: BigNumberish;
 	prize_spots: BigNumberish;
@@ -439,7 +439,7 @@ export interface Tournament {
 	creator_token_id: BigNumberish;
 	metadata: Metadata;
 	schedule: Schedule;
-	game_config: GameConfig;
+	game_config: TournamentGameConfig;
 	entry_fee: CairoOption<EntryFee>;
 	entry_requirement: CairoOption<EntryRequirement>;
 }
@@ -767,13 +767,13 @@ export type DuelType = { [key in typeof duelType[number]]: string };
 export type DuelTypeEnum = CairoCustomEnum;
 
 // Type definition for `evolute_duel::models::tournament::TournamentType` enum
-export const tournamentType = [
+export const evolveTournamentType = [
 	'Undefined',
 	'LastManStanding',
 	'BestOfThree',
 ] as const;
-export type TournamentType = { [key in typeof tournamentType[number]]: string };
-export type TournamentTypeEnum = CairoCustomEnum;
+export type EvolveTournamentType = { [key in typeof evolveTournamentType[number]]: string };
+export type EvolveTournamentTypeEnum = CairoCustomEnum;
 
 // Type definition for `evolute_duel::types::challenge_state::ChallengeState` enum
 export const challengeState = [
@@ -848,7 +848,7 @@ export const entryRequirementType = [
 ] as const;
 export type EntryRequirementType = { 
 	token: string,
-	tournament: TournamentTypeEnum,
+	tournament: TournamentComponentTypeEnum,
 	allowlist: Array<string>,
 };
 export type EntryRequirementTypeEnum = CairoCustomEnum;
@@ -898,12 +898,12 @@ export type TokenType = {
 export type TokenTypeEnum = CairoCustomEnum;
 
 // Type definition for `tournaments::components::models::tournament::TournamentType` enum
-export const tournamentType = [
+export const tournamentComponentType = [
 	'winners',
 	'participants',
 ] as const;
-export type TournamentType = { [key in typeof tournamentType[number]]: string };
-export type TournamentTypeEnum = CairoCustomEnum;
+export type TournamentComponentType = { [key in typeof tournamentComponentType[number]]: string };
+export type TournamentComponentTypeEnum = CairoCustomEnum;
 
 export interface SchemaType extends ISchemaType {
 	evolute_duel: {
@@ -915,6 +915,7 @@ export interface SchemaType extends ISchemaType {
 		Board: Board,
 		Game: Game,
 		GameConfig: GameConfig,
+		TournamentGameConfig: TournamentGameConfig,
 		MatchmakingState: MatchmakingState,
 		Move: Move,
 		PlayerMatchmaking: PlayerMatchmaking,
@@ -1054,8 +1055,8 @@ export const schema: SchemaType = {
 			id: 0,
 			available_tiles_in_deck: [0],
 		top_tile: new CairoOption(CairoOptionVariant.None),
-			player1: ["", PlayerSide, 0],
-			player2: ["", PlayerSide, 0],
+			player1: ["", { None: "", Blue: "", Red: "" }, 0],
+			player2: ["", { None: "", Blue: "", Red: "" }, 0],
 			blue_score: [0, 0],
 			red_score: [0, 0],
 		last_move_id: new CairoOption(CairoOptionVariant.None),
@@ -1325,7 +1326,7 @@ export const schema: SchemaType = {
 				tournament: undefined,
 				allowlist: undefined, }),
 		},
-		GameConfig: {
+		TournamentGameConfig: {
 			address: "",
 			settings_id: 0,
 			prize_spots: 0,
@@ -1446,8 +1447,8 @@ export const schema: SchemaType = {
 		BoardUpdated: {
 			board_id: 0,
 		top_tile: new CairoOption(CairoOptionVariant.None),
-			player1: ["", PlayerSide, 0],
-			player2: ["", PlayerSide, 0],
+			player1: ["", { None: "", Blue: "", Red: "" }, 0],
+			player2: ["", { None: "", Blue: "", Red: "" }, 0],
 			blue_score: [0, 0],
 			red_score: [0, 0],
 		last_move_id: new CairoOption(CairoOptionVariant.None),
@@ -1706,7 +1707,7 @@ export enum ModelsMapping {
 	TournamentChallenge = 'evolute_duel-TournamentChallenge',
 	TournamentPass = 'evolute_duel-TournamentPass',
 	TournamentSettings = 'evolute_duel-TournamentSettings',
-	TournamentType = 'evolute_duel-TournamentType',
+	EvolveTournamentType = 'evolute_duel-TournamentType',
 	TournamentBalance = 'evolute_duel-TournamentBalance',
 	ChallengeState = 'evolute_duel-ChallengeState',
 	GameMode = 'evolute_duel-GameMode',
@@ -1714,7 +1715,7 @@ export enum ModelsMapping {
 	GameStatus = 'evolute_duel-GameStatus',
 	PlayerSide = 'evolute_duel-PlayerSide',
 	TEdge = 'evolute_duel-TEdge',
-	Period = 'evolute_duel-Period',
+	EvolvePeriod = 'evolute_duel-Period',
 	GameCounter = 'tournaments-GameCounter',
 	GameMetadata = 'tournaments-GameMetadata',
 	Score = 'tournaments-Score',
@@ -1723,7 +1724,7 @@ export enum ModelsMapping {
 	SettingsDetails = 'tournaments-SettingsDetails',
 	TokenMetadata = 'tournaments-TokenMetadata',
 	Lifecycle = 'tournaments-Lifecycle',
-	Period = 'tournaments-Period',
+	TournamentPeriod = 'tournaments-Period',
 	Schedule = 'tournaments-Schedule',
 	ERC20Data = 'tournaments-ERC20Data',
 	ERC721Data = 'tournaments-ERC721Data',
@@ -1731,7 +1732,7 @@ export enum ModelsMapping {
 	EntryFee = 'tournaments-EntryFee',
 	EntryRequirement = 'tournaments-EntryRequirement',
 	EntryRequirementType = 'tournaments-EntryRequirementType',
-	GameConfig = 'tournaments-GameConfig',
+	TournamentGameConfig = 'tournaments-GameConfig',
 	Leaderboard = 'tournaments-Leaderboard',
 	Metadata = 'tournaments-Metadata',
 	NFTQualification = 'tournaments-NFTQualification',
@@ -1750,7 +1751,7 @@ export enum ModelsMapping {
 	TournamentConfig = 'tournaments-TournamentConfig',
 	TournamentQualification = 'tournaments-TournamentQualification',
 	TournamentTokenMetrics = 'tournaments-TournamentTokenMetrics',
-	TournamentType = 'tournaments-TournamentType',
+	TournamentComponentType = 'tournaments-TournamentType',
 	TrophyCreation = 'achievement-TrophyCreation',
 	TrophyProgression = 'achievement-TrophyProgression',
 	Task = 'achievement-Task',
