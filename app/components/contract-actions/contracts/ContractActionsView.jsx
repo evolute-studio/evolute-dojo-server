@@ -114,7 +114,12 @@ export default function ContractActionsView({
               </SelectTrigger>
               <SelectContent>
                 {options.map(option => (
-                  <SelectItem key={option} value={option}>{option}</SelectItem>
+                  <SelectItem 
+                    key={typeof option === 'object' ? option.value : option} 
+                    value={typeof option === 'object' ? option.value : option}
+                  >
+                    {typeof option === 'object' ? option.label : option}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -382,7 +382,13 @@ export const CONTRACT_ACTIONS = {
       description: 'Create new matchmaking game',
       icon: Play,
       params: [
-        { name: 'game_mode', type: 'number', required: true, placeholder: 'Game mode (0-2)' },
+        { name: 'game_mode', type: 'select', required: true, placeholder: 'Select game mode', options: [
+          { value: '0', label: 'None' },
+          { value: '1', label: 'Tutorial' },
+          { value: '2', label: 'Ranked' },
+          { value: '3', label: 'Casual' },
+          { value: '4', label: 'Tournament' }
+        ] },
         { name: 'opponent', type: 'text', required: false, placeholder: 'Opponent address (optional)' }
       ]
     },
@@ -392,7 +398,13 @@ export const CONTRACT_ACTIONS = {
       description: 'Find automatic match',
       icon: Users,
       params: [
-        { name: 'game_mode', type: 'number', required: true, placeholder: 'Game mode (0-2)' },
+        { name: 'game_mode', type: 'select', required: true, placeholder: 'Select game mode', options: [
+          { value: '0', label: 'None' },
+          { value: '1', label: 'Tutorial' },
+          { value: '2', label: 'Ranked' },
+          { value: '3', label: 'Casual' },
+          { value: '4', label: 'Tournament' }
+        ] },
         { name: 'tournament_id', type: 'text', required: false, placeholder: 'Tournament ID (optional)' }
       ]
     },
