@@ -272,10 +272,29 @@ export default function GamesView({ onActionExecute }) {
                                 onClick={async () => {
                                   if (confirm(`Cancel game ${game.id + 1}?`)) {
                                     try {
-                                      await onActionExecute('cancel_game', {}, true);
+                                      // Use admin_cancel_game from matchmaking contract with player address
+                                      const response = await fetch('/api/admin/transaction', {
+                                        method: 'POST',
+                                        headers: {
+                                          'Content-Type': 'application/json',
+                                          'X-API-Key': token
+                                        },
+                                        body: JSON.stringify({
+                                          action: 'admin_cancel_game',
+                                          contract: 'matchmaking',
+                                          player_address: game.playerFull
+                                        })
+                                      });
+
+                                      const data = await response.json();
+                                      if (!data.success) {
+                                        throw new Error(data.error || 'Failed to cancel game');
+                                      }
+                                      
                                       await loadGames();
                                     } catch (error) {
                                       console.error('Failed to cancel game:', error);
+                                      alert(`Failed to cancel game: ${error.message}`);
                                     }
                                   }
                                 }}
