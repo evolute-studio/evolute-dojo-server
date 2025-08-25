@@ -109,13 +109,13 @@ export default function AdminPanel() {
   const executeGameAction = async (action, params = {}) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/admin/game/actions', {
+      const response = await fetch('/api/admin/transaction', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-API-Key': process.env.NEXT_PUBLIC_API_SECRET_KEY || 'your-secret-api-key-here'
         },
-        body: JSON.stringify({ action, ...params })
+        body: JSON.stringify({ action, contract: 'game', ...params })
       });
       
       const data = await response.json();
@@ -138,13 +138,13 @@ export default function AdminPanel() {
   const executePlayerAction = async (action, params = {}) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/admin/player', {
+      const response = await fetch('/api/admin/transaction', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-API-Key': process.env.NEXT_PUBLIC_API_SECRET_KEY || 'your-secret-api-key-here'
         },
-        body: JSON.stringify({ action, ...params })
+        body: JSON.stringify({ action, contract: 'player', ...params })
       });
       
       const data = await response.json();

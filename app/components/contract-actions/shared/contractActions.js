@@ -33,13 +33,6 @@ export const CONTRACT_ACTIONS = {
   // Tutorial Contract
   tutorial: [
     {
-      id: 'create_tutorial_game',
-      name: 'Create Tutorial Game',
-      description: 'Start a new tutorial game session',
-      icon: Play,
-      params: []
-    },
-    {
       id: 'make_move',
       name: 'Make Move',
       description: 'Execute a move in tutorial',
@@ -109,29 +102,6 @@ export const CONTRACT_ACTIONS = {
 
   // Game Contract
   game: [
-    {
-      id: 'create_game',
-      name: 'Create Game',
-      description: 'Start a new game session',
-      icon: Play,
-      params: []
-    },
-    {
-      id: 'cancel_game',
-      name: 'Cancel Game',
-      description: 'Cancel current game',
-      icon: X,
-      params: []
-    },
-    {
-      id: 'join_game', 
-      name: 'Join Game',
-      description: 'Join an existing game',
-      icon: Users,
-      params: [
-        { name: 'host_player', type: 'text', required: true, placeholder: 'Host player address' }
-      ]
-    },
     {
       id: 'commit_tiles',
       name: 'Commit Tiles',
