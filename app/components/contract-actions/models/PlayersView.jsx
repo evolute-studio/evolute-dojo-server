@@ -5,15 +5,22 @@ import { useAuth } from '../../TokenAuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import PlayerFilters from '../../PlayerFilters';
 import PlayerEditModal from '../../PlayerEditModal';
+import PlayerTopupModal from '../../PlayerTopupModal';
 import { 
   Users, 
   Filter, 
   User, 
   Loader2, 
   AlertCircle,
-  Activity
+  Activity,
+  Copy,
+  Check,
+  MoreHorizontal,
+  Wallet
 } from 'lucide-react';
 
 export default function PlayersView({ onActionExecute }) {
@@ -28,7 +35,9 @@ export default function PlayersView({ onActionExecute }) {
     roles: []
   });
   const [playerEditModalOpen, setPlayerEditModalOpen] = useState(false);
+  const [playerTopupModalOpen, setPlayerTopupModalOpen] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [copiedAddress, setCopiedAddress] = useState(null);
 
   // Load players when component mounts and token is available
   useEffect(() => {
@@ -111,9 +120,54 @@ export default function PlayersView({ onActionExecute }) {
     setPlayerEditModalOpen(true);
   };
 
+  const handleTopupPlayer = (player) => {
+    setSelectedPlayer(player);
+    setPlayerTopupModalOpen(true);
+  };
+
   const handleClosePlayerEditModal = () => {
     setPlayerEditModalOpen(false);
     setSelectedPlayer(null);
+  };
+
+  const handleClosePlayerTopupModal = () => {
+    setPlayerTopupModalOpen(false);
+    setSelectedPlayer(null);
+  };
+
+  const handleCopyAddress = async (address) => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(address);
+        setCopiedAddress(address);
+        setTimeout(() => setCopiedAddress(null), 2000);
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setCopiedAddress(address);
+        setTimeout(() => setCopiedAddress(null), 2000);
+      }
+    } catch (error) {
+      console.error('Failed to copy address:', error);
+      // Try fallback method
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setCopiedAddress(address);
+        setTimeout(() => setCopiedAddress(null), 2000);
+      } catch (fallbackError) {
+        console.error('Fallback copy also failed:', fallbackError);
+      }
+    }
   };
 
   return (
@@ -188,62 +242,93 @@ export default function PlayersView({ onActionExecute }) {
               )}
 
               {!playersLoading && filteredPlayers.length > 0 && (
-                <div className="space-y-4">
-                  {filteredPlayers.map((player, index) => (
-                    <div key={player.id || index} className="border rounded-lg p-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <h3 className="font-semibold">{player.username}</h3>
+                <>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Username</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Player ID</TableHead>
+                        <TableHead>Balance</TableHead>
+                        <TableHead>Games</TableHead>
+                        <TableHead>Active Skin</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredPlayers.map((player, index) => (
+                        <TableRow key={player.id || index}>
+                          <TableCell className="font-medium">
+                            {player.username}
+                          </TableCell>
+                          <TableCell>
                             <Badge variant="outline" className="text-xs">
                               {player.roleText}
                             </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <button
+                              onClick={() => handleCopyAddress(player.playerIdFull)}
+                              className="font-mono text-xs break-all text-left hover:bg-muted rounded px-2 py-1 transition-colors flex items-center space-x-2 group"
+                              title="Click to copy full address"
+                            >
+                              <span>{player.playerIdFull?.slice(0, 16)}...</span>
+                              {copiedAddress === player.playerIdFull ? (
+                                <Check className="h-3 w-3 text-green-600" />
+                              ) : (
+                                <Copy className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              )}
+                            </button>
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-mono">{player.balance}</span>
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-mono">{player.gamesPlayed}</span>
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-mono">{player.activeSkin}</span>
+                          </TableCell>
+                          <TableCell>
                             {player.tutorialCompleted && (
                               <Badge variant="secondary" className="text-xs">
                                 Tutorial ✓
                               </Badge>
                             )}
-                          </div>
-                          <div className="text-sm text-muted-foreground space-y-1">
-                            <p>Player ID: <span className="font-mono text-xs break-all">{player.playerIdFull}</span></p>
-                            <div className="grid grid-cols-3 gap-4 text-xs">
-                              <div>
-                                <span className="text-muted-foreground">Balance:</span>
-                                <span className="ml-1 font-mono">{player.balance}</span>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Games:</span>
-                                <span className="ml-1 font-mono">{player.gamesPlayed}</span>
-                              </div>
-                              <div>
-                                <span className="text-muted-foreground">Active Skin:</span>
-                                <span className="ml-1 font-mono">{player.activeSkin}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="space-x-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleEditPlayer(player)}
-                          >
-                            <User className="h-4 w-4 mr-1" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="text-center py-4 text-muted-foreground border-t">
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleEditPlayer(player)}>
+                                  <User className="h-4 w-4 mr-2" />
+                                  Edit Player
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleTopupPlayer(player)}>
+                                  <Wallet className="h-4 w-4 mr-2" />
+                                  Topup Balance
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  
+                  <div className="text-center py-4 text-muted-foreground border-t mt-4">
                     <p className="text-sm mb-2">
                       Showing {filteredPlayers.length} of {players.length} players
                       {filteredPlayers.length !== players.length && ' (filtered)'}
                     </p>
                     <p className="text-xs">Data refreshed from Torii GraphQL endpoint</p>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </CardContent>
@@ -253,6 +338,14 @@ export default function PlayersView({ onActionExecute }) {
         <PlayerEditModal
           isOpen={playerEditModalOpen}
           onClose={handleClosePlayerEditModal}
+          player={selectedPlayer}
+          onActionExecute={onActionExecute}
+        />
+
+        {/* Player Topup Modal */}
+        <PlayerTopupModal
+          isOpen={playerTopupModalOpen}
+          onClose={handleClosePlayerTopupModal}
           player={selectedPlayer}
           onActionExecute={onActionExecute}
         />

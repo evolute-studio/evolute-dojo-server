@@ -5,6 +5,7 @@ import { useAuth } from '../../TokenAuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../ui/card';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../ui/table';
 import GameFilters from '../../GameFilters';
 import BoardDetailsModal from '../../BoardDetailsModal';
 import { 
@@ -188,84 +189,108 @@ export default function GamesView({ onActionExecute }) {
                 </div>
               )}
 
-              {!gamesLoading && filteredGames.length > 0 && filteredGames.map((game, index) => (
-                <div key={game.id || index} className="border rounded-lg p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-semibold">Game #{game.id + 1}</h3>
-                        <Badge 
-                          variant={
-                            game.status === 'In progress' ? 'default' : 
-                            game.status === 'Waiting for player' ? 'secondary' :
-                            game.status === 'Finished' ? 'outline' : 'destructive'
-                          }
-                        >
-                          {game.status}
-                        </Badge>
-                        <Badge variant="outline" className="text-xs">
-                          {game.gameMode}
-                        </Badge>
-                        {game.playersCount > 1 && (
-                          <Badge variant="secondary" className="text-xs">
-                            {game.playersCount} Players
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-sm text-muted-foreground space-y-1">
-                        {game.players && game.players.length > 1 ? (
-                          <div>
-                            <p>Players ({game.playersCount}):</p>
-                            {game.players.map((player, idx) => (
-                              <p key={idx} className="ml-2">
-                                {idx === 0 ? '🎮 Host' : `👤 Player ${idx + 1}`}: 
-                                <span className="font-mono ml-1 text-xs break-all">{player.address}</span>
-                              </p>
-                            ))}
-                          </div>
-                        ) : (
-                          <p>Player: <span className="font-mono text-xs break-all">{game.playerFull}</span></p>
-                        )}
-                        {game.boardId && (
-                          <p>Board ID: <span className="font-mono text-xs">{game.boardId}</span></p>
-                        )}
-                        <p>Mode: {game.gameMode}</p>
-                      </div>
-                    </div>
-                    <div className="space-x-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleShowBoardDetails(game.boardId)}
-                        disabled={!game.boardId}
-                        title={!game.boardId ? 'No board ID available' : 'Show board details'}
-                      >
-                        <Eye className="h-4 w-4 mr-1" />
-                        Details
-                      </Button>
-                      {(game.status === 'Waiting for player' || game.status === 'In progress') && (
-                        <Button 
-                          size="sm" 
-                          variant="destructive"
-                          onClick={async () => {
-                            if (confirm(`Cancel game ${game.id + 1}?`)) {
-                              try {
-                                await onActionExecute('cancel_game', {}, true);
-                                await loadGames(); // Refresh after cancel
-                              } catch (error) {
-                                console.error('Failed to cancel game:', error);
-                              }
+              {!gamesLoading && filteredGames.length > 0 && (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Game</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Mode</TableHead>
+                      <TableHead>Players</TableHead>
+                      <TableHead>Board ID</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredGames.map((game, index) => (
+                      <TableRow key={game.id || index}>
+                        <TableCell className="font-medium">
+                          Game #{game.id + 1}
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={
+                              game.status === 'In progress' ? 'default' : 
+                              game.status === 'Waiting for player' ? 'secondary' :
+                              game.status === 'Finished' ? 'outline' : 'destructive'
                             }
-                          }}
-                        >
-                          <X className="h-4 w-4 mr-1" />
-                          Cancel
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                          >
+                            {game.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs">
+                            {game.gameMode}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            {game.players && game.players.length > 1 ? (
+                              <div>
+                                <Badge variant="secondary" className="text-xs mb-1">
+                                  {game.playersCount} Players
+                                </Badge>
+                                {game.players.slice(0, 2).map((player, idx) => (
+                                  <div key={idx} className="text-xs text-muted-foreground">
+                                    {idx === 0 ? '🎮' : '👤'} {player.address.slice(0, 8)}...
+                                  </div>
+                                ))}
+                                {game.players.length > 2 && (
+                                  <div className="text-xs text-muted-foreground">+{game.players.length - 2} more</div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-muted-foreground font-mono">
+                                {game.playerFull?.slice(0, 12)}...
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {game.boardId ? (
+                            <span className="font-mono text-xs">{game.boardId}</span>
+                          ) : (
+                            <span className="text-muted-foreground text-xs">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="space-x-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleShowBoardDetails(game.boardId)}
+                              disabled={!game.boardId}
+                              title={!game.boardId ? 'No board ID available' : 'Show board details'}
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              Details
+                            </Button>
+                            {(game.status === 'Waiting for player' || game.status === 'In progress') && (
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={async () => {
+                                  if (confirm(`Cancel game ${game.id + 1}?`)) {
+                                    try {
+                                      await onActionExecute('cancel_game', {}, true);
+                                      await loadGames();
+                                    } catch (error) {
+                                      console.error('Failed to cancel game:', error);
+                                    }
+                                  }
+                                }}
+                              >
+                                <X className="h-4 w-4 mr-1" />
+                                Cancel
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
               
               {!gamesLoading && games.length > 0 && (
                 <div className="text-center py-4 text-muted-foreground border-t">
