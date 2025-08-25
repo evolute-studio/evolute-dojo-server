@@ -44,8 +44,30 @@ export default function PlayerTopupModal({ isOpen, onClose, player, onActionExec
     setIsLoadingBalance(true);
     setError(null);
     try {
-      const result = await onActionExecute('balance_of', { account: player.playerIdFull });
-      setBalance(result);
+      // Call balance_of directly via transaction API with evlt_token contract
+      const response = await fetch('/api/admin/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': token
+        },
+        body: JSON.stringify({
+          action: 'balance_of',
+          contract: 'evlt_token',
+          account: player.playerIdFull
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to fetch balance');
+      }
+
+      setBalance(data.data.result);
     } catch (err) {
       console.error('Failed to load balance:', err);
       setError(err.message);
