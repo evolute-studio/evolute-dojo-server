@@ -84,15 +84,34 @@ export default function PlayerTopupModal({ isOpen, onClose, player, onActionExec
     setError(null);
 
     try {
-      const result = await onActionExecute('mint_evlt', {
-        user: player.playerIdFull,
-        amount: topupAmount,
-        source: 1 // Admin topup source
+      // Call mint_evlt directly via transaction API with evlt_topup contract
+      const response = await fetch('/api/admin/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': token
+        },
+        body: JSON.stringify({
+          action: 'mint_evlt',
+          contract: 'evlt_topup',
+          user: player.playerIdFull,
+          amount: topupAmount,
+          source: 1 // Admin topup source
+        })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to mint EVLT tokens');
+      }
       
       setTransactionResult({
         success: true,
-        data: result,
+        data: data.data,
         message: `Successfully topped up ${topupAmount} EVLT tokens to ${player.username}`
       });
       
