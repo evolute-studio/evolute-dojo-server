@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './TokenAuthProvider';
 import { useProfileErrorHandler } from '../hooks/useProfileErrorHandler';
 import Sidebar from './Sidebar';
-import ContractActionsNew from './ContractActionsNew';
+import ContractActionsNew from './contract-actions/ContractActionsNew';
 import ProfileErrorModal from './ProfileErrorModal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
